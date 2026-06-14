@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useTrip } from "../context/TripContext";
 import { useAuth } from "../context/AuthContext";
 import { useEffect } from "react";
-import { LogOut, User } from "lucide-react";
+import { LogOut, User, BarChart3, Truck, Settings } from "lucide-react";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -312,15 +312,15 @@ const Dashboard = () => {
 
       <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
         <button className="bg-white border-4 border-black p-6 font-black uppercase text-left hover:bg-yellow-400 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
-          <span className="text-3xl block mb-2">📊</span>
+          <BarChart3 className="mb-2" size={32} strokeWidth={3} />
           Generate Report
         </button>
         <button className="bg-white border-4 border-black p-6 font-black uppercase text-left hover:bg-yellow-400 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
-          <span className="text-3xl block mb-2">🚚</span>
+          <Truck className="mb-2" size={32} strokeWidth={3} />
           Manage Vehicles
         </button>
         <button className="bg-white border-4 border-black p-6 font-black uppercase text-left hover:bg-yellow-400 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
-          <span className="text-3xl block mb-2">⚙️</span>
+          <Settings className="mb-2" size={32} strokeWidth={3} />
           Settings
         </button>
       </div>

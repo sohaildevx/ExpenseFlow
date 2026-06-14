@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTrip } from '../context/TripContext'
-import { Upload, X, Image as ImageIcon } from 'lucide-react'
+import { Upload, X, Image as ImageIcon, ClipboardList, Receipt, UserCheck, CreditCard, Camera } from 'lucide-react'
 import { toast } from 'react-toastify';
 
 const AddTrips = () => {
@@ -194,8 +194,9 @@ const AddTrips = () => {
 
 
           <div className='bg-yellow-400 border-b-4 border-black p-4'>
-            <h2 className='text-xl md:text-2xl font-black uppercase'>
-              📋 Basic Information
+            <h2 className='text-xl md:text-2xl font-black uppercase flex items-center gap-2'>
+              <ClipboardList size={22} strokeWidth={3} />
+              Basic Information
             </h2>
           </div>
 
@@ -264,8 +265,9 @@ const AddTrips = () => {
 
 
           <div className='bg-red-400 border-t-4 border-b-4 border-black p-4'>
-            <h2 className='text-xl md:text-2xl font-black uppercase'>
-              💰 Expenses
+            <h2 className='text-xl md:text-2xl font-black uppercase flex items-center gap-2'>
+              <Receipt size={22} strokeWidth={3} />
+              Expenses
             </h2>
           </div>
 
@@ -373,8 +375,9 @@ const AddTrips = () => {
 
 
           <div className='bg-green-400 border-t-4 border-b-4 border-black p-4'>
-            <h2 className='text-xl md:text-2xl font-black uppercase'>
-              👨‍✈️ Driver Allowance
+            <h2 className='text-xl md:text-2xl font-black uppercase flex items-center gap-2'>
+              <UserCheck size={22} strokeWidth={3} />
+              Driver Allowance
             </h2>
           </div>
 
@@ -431,8 +434,9 @@ const AddTrips = () => {
 
 
           <div className='bg-orange-400 border-t-4 border-b-4 border-black p-4'>
-            <h2 className='text-xl md:text-2xl font-black uppercase'>
-              📊 Payment Status
+            <h2 className='text-xl md:text-2xl font-black uppercase flex items-center gap-2'>
+              <CreditCard size={22} strokeWidth={3} />
+              Payment Status
             </h2>
           </div>
 
@@ -481,8 +485,9 @@ const AddTrips = () => {
 
           {/* Receipt Upload Section */}
           <div className='bg-purple-400 border-t-4 border-b-4 border-black p-4'>
-            <h2 className='text-xl md:text-2xl font-black uppercase'>
-              📸 Payment Receipts
+            <h2 className='text-xl md:text-2xl font-black uppercase flex items-center gap-2'>
+              <Camera size={22} strokeWidth={3} />
+              Payment Receipts
             </h2>
           </div>
 

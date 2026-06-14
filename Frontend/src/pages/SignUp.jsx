@@ -12,6 +12,7 @@ const SignUp = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [userType, setUserType] = useState('simple');
+    const [loading, setLoading] = useState(false);
     const navigate= useNavigate();
     const {register}=useAuth();
 
@@ -22,7 +23,8 @@ const SignUp = () => {
             setError("All fields are required");
             return;
         }
-
+         
+        setLoading(true);
         try {
             const formData = await register(name,email,password, userType)
             if(formData.success){
@@ -35,6 +37,8 @@ const SignUp = () => {
         } catch (error) {
             setError("Registration failed. Please try again.");
             toast.error("Registration failed. Please try again.");
+        }finally{
+          setLoading(false);
         }
     }
   return (
@@ -132,8 +136,13 @@ const SignUp = () => {
 
         {error && <p className="text-red-600 font-bold mb-2 text-center text-sm">{error}</p>}
 
-        <button className="bg-black text-yellow-400 font-black text-base md:text-xl uppercase py-2 px-4 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all mb-2 select-none" type="submit" onClick={handleSubmit}>
-          Sign Up
+        <button
+          type="submit"
+          disabled={loading}
+          onClick={handleSubmit}
+          className="bg-black text-yellow-400 font-black text-base md:text-xl uppercase py-2 px-4 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 active:bg-gray-800 active:shadow-none active:translate-x-1 active:translate-y-1 transition-all mb-2 select-none disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loading ? 'Signing Up...' : 'Sign Up'}
         </button>
 
         <div className="flex items-center my-1">
@@ -152,7 +161,7 @@ const SignUp = () => {
           <Link to="/login">
             <button
               type="button"
-              className="w-full bg-white text-black font-black text-base md:text-xl uppercase py-2 px-4 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all select-none"
+              className="w-full bg-white text-black font-black text-base md:text-xl uppercase py-2 px-4 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 active:bg-gray-100 active:shadow-none active:translate-x-1 active:translate-y-1 transition-all select-none"
             >
               Login
             </button>
