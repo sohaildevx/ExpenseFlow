@@ -142,10 +142,9 @@ const generateAllTransportReports = async () => {
                     continue;
                 }
 
-                console.log(`[${user.name}] AI analysis complete. Generating email...`);
-                console.log(`[${user.name}] Stats:`, analysis.stats);
+                console.log(`[${user.name}] Sending email to ${user.email}...`);
 
-                 const emailContent = monthlyReportTemplate({
+                const emailContent = monthlyReportTemplate({
                     userName: user.name,
                     month: monthNames[lastMonth],
                     year: lastYear,
@@ -154,8 +153,6 @@ const generateAllTransportReports = async () => {
                     reportType: 'business'
                 });
 
-                console.log(`[${user.name}] Sending email to ${user.email}...`);
-                
                 await sendMail({
                     from: process.env.SENDER_EMAIL,
                     to: user.email,

@@ -15,13 +15,11 @@ export const AuthProvider = ({children}) => {
     const checkAuth = async()=>{
           try {
             const response = await axios.get('/user/getCurrentUser');
-            console.log("user data:",response.data.user.name);
             setUser(response.data.user);
             setIsAuthenticated(true);
           } catch (error) {
             setIsAuthenticated(false);
             setUser(null);
-            console.log("Not authenticated", error);
           } finally{
             setLoading(false);
           }

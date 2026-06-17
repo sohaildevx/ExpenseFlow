@@ -177,9 +177,6 @@ const uploadRecipt = async(req,res)=>{
         return res.status(404).json({message:"Trip expense not found"});
       }
 
-            console.log('Available properties:', Object.keys(req.file));
-
-
       trip.receipts.push({
         url: req.file.path,
         public_id: req.file.filename,

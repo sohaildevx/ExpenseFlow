@@ -30,9 +30,6 @@ const SupportButton = () => {
         description: 'Support Developer',
         order_id: order.id,
         handler: async function (response) {
-          console.log('Payment response:', response);
-
-          
           const verifyResult = await verifyPayment({
             razorpay_order_id: response.razorpay_order_id,
             razorpay_payment_id: response.razorpay_payment_id,
@@ -59,12 +56,10 @@ const SupportButton = () => {
       
       rzp.on('payment.failed', function (response) {
         alert('Payment failed. Please try again.');
-        console.error('Payment failed:', response.error);
       });
 
       rzp.open();
     } catch (error) {
-      console.error('Payment error:', error);
       alert('Something went wrong. Please try again.');
     }
   };

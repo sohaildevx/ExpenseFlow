@@ -28,7 +28,6 @@ export const SimpleExpenseContextProvider = ({ children }) => {
             setExpenses(response.data.expenses);
             return {success:true, data: response.data};
         } catch (error) {
-            console.log("Fecthing expense error", error);
             return {success:false, message: error.response?.data?.message || 'Failed to fetch expenses'};
         } finally {
             setLoading(false); 
@@ -41,7 +40,6 @@ export const SimpleExpenseContextProvider = ({ children }) => {
             const response = await axios.delete(`/expense/${expenseId}`);
             return {success:true, data: response.data};
          } catch (error) {
-            console.log("Error in deleting", error.message);
             return {success:false, message: error.response?.data?.message || 'Failed to delete expense'};
          }finally{
             setLoading(false);
@@ -55,7 +53,6 @@ export const SimpleExpenseContextProvider = ({ children }) => {
             setSimpleUser(response.data.user);
             return {success:true, data: response.data};
         } catch (error) {
-            console.log("Error in updating", error.message);
             return {success:false, message: error.response?.data?.message || 'Failed to update expense'};
         } finally {
             setLoading(false);
@@ -74,7 +71,6 @@ export const SimpleExpenseContextProvider = ({ children }) => {
             });
             return {success:true, data: response.data};
         } catch (error) {
-            console.log("Error in scanning receipt", error);
             return {success:false, message: error.response?.data?.message || 'Failed to scan receipt'};
         } finally {
             setLoading(false);
@@ -93,7 +89,6 @@ export const SimpleExpenseContextProvider = ({ children }) => {
             });
             return {success:true, data: response.data};
         } catch (error) {
-            console.log("Error in uploading receipt", error);
             return {success:false, message: error.response?.data?.message || 'Failed to upload receipt'};
         } finally {
             setLoading(false);
@@ -109,7 +104,6 @@ export const SimpleExpenseContextProvider = ({ children }) => {
             setBudget(response.data.budget);
             return {success:true, data: response.data};
         } catch (error) {
-            console.log("Error in adding budget", error);
             return {success:false, message: error.response?.data?.message || 'Failed to add budget'};
         } finally {
             setLoading(false);
@@ -123,7 +117,6 @@ export const SimpleExpenseContextProvider = ({ children }) => {
             setBudget(response.data.budget);
             return {success:true, data: response.data};
         } catch (error) {
-            console.log("Error in fetching budget", error);
             return {success:false, message: error.response?.data?.message || 'Failed to fetch budget'};
         } finally {
             setLoading(false);
@@ -137,7 +130,6 @@ export const SimpleExpenseContextProvider = ({ children }) => {
             setBudget(response.data.budgets);
             return {success:true, data: response.data};
         } catch (error) {
-            console.log("Error in fetching budgets", error);
             return {success:false, message: error.response?.data?.message || 'Failed to fetch budgets'};
         } finally {
             setLoading(false);

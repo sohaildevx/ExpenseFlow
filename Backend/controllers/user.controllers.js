@@ -121,8 +121,6 @@ const resetPassOtp = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      console.log(user);
-
       return res
         .status(404)
         .json({ message: "If user exists, OTP sent to email" });
@@ -171,7 +169,6 @@ const resetPassword = async (req, res) => {
       return res.status(400).json({ message: "Otp Expired" });
     }
 
-     console.log('Stored OTP:', user.resetOtp, 'Received OTP:', otp);
     if (user.resetOtp !== otp) {
       return res.status(400).json({ message: "Invalid OTP" });
     }
