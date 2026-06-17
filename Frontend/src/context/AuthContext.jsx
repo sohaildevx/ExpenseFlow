@@ -91,11 +91,21 @@ export const AuthProvider = ({children}) => {
 
     }
 
+    const verifyResetOtp = async(email, otp)=>{
+        try{
+            const response = await axios.post('/user/verify-reset-otp',{email, otp});
+            return {success:true, message: response.data.message || 'OTP verified'};
+        }catch(error){
+            return {success:false, message: error.response?.data?.message || 'Failed to verify OTP'};
+        }
+    }
+
     const value ={
         user,
         loading,
         isAuthenticated,
         resetPassOtp,
+        verifyResetOtp,
         resetPassword,
         login,
         logOut,

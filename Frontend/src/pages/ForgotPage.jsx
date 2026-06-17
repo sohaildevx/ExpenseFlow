@@ -12,7 +12,7 @@ const ForgotPage = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [otpValues, setOtpValues] = useState(["", "", "", "", "", ""]);
-  const { resetPassOtp, resetPassword } = useAuth();
+  const { resetPassOtp, verifyResetOtp, resetPassword } = useAuth();
   
   const inputRefs = useRef([]);
 
@@ -90,12 +90,24 @@ const ForgotPage = () => {
     if (otp.length !== 6) {
       setError("Please enter complete 6-digit OTP");
       return;
-    }else{
-      toast.success("OTP verified successfully!");
-      setIsOtpVerified(true);
     }
 
-
+    try {
+      setLoading(true);
+      const response = await verifyResetOtp(email, otp);
+      if (response.success) {
+        toast.success(response.message || "OTP verified successfully!");
+        setIsOtpVerified(true);
+      } else {
+        setError(response.message);
+        toast.error(response.message);
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || "Failed to verify OTP");
+      toast.error(error.response?.data?.message || "Failed to verify OTP");
+    } finally {
+      setLoading(false);
+    }
   };
 
  

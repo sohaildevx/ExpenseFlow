@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUser, loginUser, getCurrentUser, logOutUser, resetPassOtp,resetPassword } from "../controllers/user.controllers.js";
+import { createUser, loginUser, getCurrentUser, logOutUser, resetPassOtp, verifyResetOtp, resetPassword } from "../controllers/user.controllers.js";
 import { body } from "express-validator";
 import {authToken} from "../middleware/auth.js";
 
@@ -22,6 +22,11 @@ router.post('/login',[
 router.post('/send-reset-otp',[
     body('email').isEmail().withMessage('Invalid email address').normalizeEmail(),
 ],resetPassOtp);
+
+router.post('/verify-reset-otp',[
+    body('email').isEmail().withMessage('Invalid email address').normalizeEmail(),
+    body('otp').notEmpty().withMessage('OTP is required').trim(),
+],verifyResetOtp);
 
 router.post('/reset-password',[
     body('email').isEmail().withMessage('Invalid email address').normalizeEmail(),
