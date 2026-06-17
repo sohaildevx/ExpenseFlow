@@ -9,5 +9,6 @@ import View from "./View";
 import SupportButton from "./SupportButton";
 import Supporters from "./SupportPage";
 import AllTrips from "./AllTrips";
+import VerifyEmail from "./VerifyEmail";
 
-export { Login, Home, Dashboard, ForgotPage, SignUp, AddTrip, EditTrip, View, SupportButton, Supporters, AllTrips };
+export { Login, Home, Dashboard, ForgotPage, SignUp, AddTrip, EditTrip, View, SupportButton, Supporters, AllTrips, VerifyEmail };

@@ -332,3 +332,32 @@ export const monthlyReportTemplate = ({ userName, month, year, analysis, stats, 
 </html>
   `;
 };
+
+
+export const emailVerificationTemplate = (otp) => `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Verify Your Email</title>
+<style>
+  body { background: #ffffff; margin: 0; padding: 0; font-family: "Arial", sans-serif; color: #000; }
+  .container { max-width: 600px; margin: 0 auto; border: 3px solid #000; padding: 30px; }
+  h1 { font-size: 32px; margin: 0 0 20px 0; font-weight: 700; text-transform: uppercase; letter-spacing: -1px; }
+  .otp-box { border: 3px dashed #000; padding: 20px; font-size: 28px; font-weight: bold; text-align: center; margin: 30px 0; }
+  .warning { font-size: 14px; padding: 10px; border: 2px solid #000; background: #ffeb3b; font-weight: 600; }
+  .footer { margin-top: 40px; font-size: 12px; opacity: 0.7; border-top: 2px solid #000; padding-top: 10px; }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Verify Your Email</h1>
+    <p>Welcome to ExpenseFlow! Use the OTP below to verify your email:</p>
+    <div class="otp-box">${otp}</div>
+    <p>This OTP is valid for <strong>15 minutes</strong>.</p>
+    <div class="warning">If you didn't create an account, ignore this email.</div>
+    <div class="footer">This is an automated email. Please do not reply.</div>
+  </div>
+</body>
+</html>
+`;

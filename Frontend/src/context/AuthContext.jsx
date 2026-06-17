@@ -33,6 +33,9 @@ export const AuthProvider = ({children}) => {
             setUser(response.data.user);
             return {success: true};
          } catch (error) {
+            if (error.response?.status === 403 && error.response?.data?.needsVerification) {
+                return {success: false, needsVerification: true, email: error.response.data.email, message: error.response.data.message};
+            }
             return{
                 success: false,
                 message: error.response?.data?.message || 'Login failed'
@@ -43,9 +46,7 @@ export const AuthProvider = ({children}) => {
     const register = async(name,email,password,userType)=>{
         try{
             const response = await axios.post('/user/register',{name,email,password,userType});
-            setUser(response.data.user);
-            setIsAuthenticated(true);
-            return {success: true};
+            return {success: true, email: response.data.email};
         }catch(error){
             return{
                 success: false,
@@ -100,6 +101,24 @@ export const AuthProvider = ({children}) => {
         }
     }
 
+    const verifyEmail = async(email, otp)=>{
+        try{
+            const response = await axios.post('/user/verify-email',{email, otp});
+            return {success:true, message: response.data.message || 'Email verified'};
+        }catch(error){
+            return {success:false, message: error.response?.data?.message || 'Failed to verify email'};
+        }
+    }
+
+    const resendVerificationOtp = async(email)=>{
+        try{
+            const response = await axios.post('/user/resend-verification-otp',{email});
+            return {success:true, message: response.data.message || 'OTP sent successfully'};
+        }catch(error){
+            return {success:false, message: error.response?.data?.message || 'Failed to send OTP'};
+        }
+    }
+
     const value ={
         user,
         loading,
@@ -107,6 +126,8 @@ export const AuthProvider = ({children}) => {
         resetPassOtp,
         verifyResetOtp,
         resetPassword,
+        verifyEmail,
+        resendVerificationOtp,
         login,
         logOut,
         register,

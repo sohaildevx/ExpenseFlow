@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUser, loginUser, getCurrentUser, logOutUser, resetPassOtp, verifyResetOtp, resetPassword } from "../controllers/user.controllers.js";
+import { createUser, loginUser, getCurrentUser, logOutUser, resetPassOtp, verifyResetOtp, resetPassword, verifyEmail, resendVerificationOtp } from "../controllers/user.controllers.js";
 import { body } from "express-validator";
 import {authToken} from "../middleware/auth.js";
 
@@ -33,6 +33,15 @@ router.post('/reset-password',[
     body('otp').notEmpty().withMessage('OTP is required').trim(),
     body('newPassword').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long').trim()
 ],resetPassword);
+
+router.post('/verify-email',[
+    body('email').isEmail().withMessage('Invalid email address').normalizeEmail(),
+    body('otp').notEmpty().withMessage('OTP is required').trim(),
+],verifyEmail);
+
+router.post('/resend-verification-otp',[
+    body('email').isEmail().withMessage('Invalid email address').normalizeEmail(),
+],resendVerificationOtp);
 
 router.get('/getCurrentUser',authToken,getCurrentUser);
 router.post('/logout',authToken,logOutUser);

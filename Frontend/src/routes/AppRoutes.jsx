@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { Login, Home, Dashboard, ForgotPage, SignUp,AddTrip, View, EditTrip, Supporters, AllTrips } from "../pages/pages.js";
+import { Login, Home, Dashboard, ForgotPage, SignUp,AddTrip, View, EditTrip, Supporters, AllTrips, VerifyEmail } from "../pages/pages.js";
 import {ExpenseDashboard, AddExpense, Budget, AllExpensesPage} from '../../Expense/page.js';
 import ProtectedRoute from "./ProtectedRoute.jsx";
 
@@ -10,6 +10,7 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
         <Route
           path="/forgot"
           element={

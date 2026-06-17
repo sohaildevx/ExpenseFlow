@@ -24,6 +24,18 @@ const userSchema = new Schema({
         type:Number,
         default:0
     },
+    isEmailVerified:{
+        type:Boolean,
+        default:false
+    },
+    verifyOtp:{
+        type:String,
+        default:''
+    },
+    verifyOtpExpiry:{
+        type:Number,
+        default:0
+    },
     userType:{
         type:String,
         enum:['transport','simple'],

@@ -4,12 +4,13 @@ import { generateToken, setTokenCookie } from "../utils/jsonAuth.js";
 import { sendMail } from "../config/nodeMailer.js";
 import { resetPasswordTemplate } from "../config/EmailTemplate.js";
 import crypto from "crypto";
+import {emailVerificationTemplate} from "../config/EmailTemplate.js"
+
 
 const createUser = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(400).json({ errors: errors.array().map(e => ({ ...e, value: undefined })) });
   }
 
   const { name, email, password, userType } = req.body;
@@ -25,11 +26,22 @@ const createUser = async (req, res) => {
     }
 
     const user = await User.create({ name, email, password, userType });
+
+    const otp = crypto.randomInt(100000, 1000000).toString();
+    user.verifyOtp = otp;
+    user.verifyOtpExpiry = Date.now() + 15 * 60 * 1000;
     await user.save();
+
+    await sendMail({
+      from: process.env.SENDER_EMAIL,
+      to: user.email,
+      subject: "Verify Your Email - ExpenseFlow",
+      html: emailVerificationTemplate(otp),
+    });
 
     return res
       .status(201)
-      .json({ message: "User created successfully", userId: user._id });
+      .json({ message: "Account created. Please verify your email.", email: user.email });
   } catch (error) {
     res.status(500).json({ message: "User creation failed" });
   }
@@ -51,6 +63,10 @@ const loginUser = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
+    }
+
+    if (!user.isEmailVerified) {
+      return res.status(403).json({ message: "Email not verified", email: user.email, needsVerification: true });
     }
 
     const isMatch = await user.comparePassword(password);
@@ -219,6 +235,86 @@ const resetPassword = async (req, res) => {
   }
 };
 
+const verifyEmail = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { email, otp } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.isEmailVerified) {
+      return res.status(200).json({ message: "Email already verified" });
+    }
+
+    if (!user.verifyOtp || user.verifyOtp === "") {
+      return res.status(400).json({ message: "No OTP found. Please request a new one." });
+    }
+
+    if (user.verifyOtpExpiry < Date.now()) {
+      user.verifyOtp = "";
+      user.verifyOtpExpiry = 0;
+      await user.save();
+      return res.status(400).json({ message: "OTP expired" });
+    }
+
+    if (user.verifyOtp !== otp) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    user.isEmailVerified = true;
+    user.verifyOtp = "";
+    user.verifyOtpExpiry = 0;
+    await user.save();
+
+    res.status(200).json({ message: "Email verified successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Failed to verify email" });
+  }
+};
+
+const resendVerificationOtp = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.isEmailVerified) {
+      return res.status(200).json({ message: "Email already verified" });
+    }
+
+    const otp = crypto.randomInt(100000, 1000000).toString();
+    user.verifyOtp = otp;
+    user.verifyOtpExpiry = Date.now() + 15 * 60 * 1000;
+    await user.save();
+
+    await sendMail({
+      from: process.env.SENDER_EMAIL,
+      to: user.email,
+      subject: "Verify Your Email - ExpenseFlow",
+      html: emailVerificationTemplate(otp),
+    });
+
+    res.status(200).json({ message: "OTP sent to your email" });
+  } catch (error) {
+    return res.status(500).json({ message: "Failed to resend OTP" });
+  }
+};
+
 export {
   createUser,
   loginUser,
@@ -227,4 +323,6 @@ export {
   resetPassOtp,
   verifyResetOtp,
   resetPassword,
+  verifyEmail,
+  resendVerificationOtp,
 };

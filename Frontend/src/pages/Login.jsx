@@ -40,6 +40,9 @@ const Login = () => {
       if(result.success){
         toast.success("Login successful!");
         setError(null);
+      }else if(result.needsVerification){
+        toast.error("Email not verified. Please verify your email.");
+        navigate('/verify-email', { state: { email: result.email } });
       }else{
         setError(result.message);
         toast.error(result.message);

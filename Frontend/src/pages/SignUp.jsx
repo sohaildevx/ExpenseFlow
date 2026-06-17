@@ -28,8 +28,8 @@ const SignUp = () => {
         try {
             const formData = await register(name,email,password, userType)
             if(formData.success){
-                toast.success("Registration successful! Please login.");
-                navigate('/login');
+                toast.success("Account created! Please verify your email.");
+                navigate('/verify-email', { state: { email: formData.email || email } });
             }else{
                 setError(formData.message);
                 toast.error(formData.message);
