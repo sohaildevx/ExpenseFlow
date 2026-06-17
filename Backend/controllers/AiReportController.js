@@ -2,7 +2,7 @@ import { analyzeSimpleExpenses, analyzeTransportExpenses } from "../service/AiAn
 import Expense from "../model/expense.model.js";
 import User from "../model/user.model.js";
 import TripExpenses from "../model/tripeExpenses.js";
-import { transport } from "../config/nodeMailer.js";
+import { sendMail } from "../config/nodeMailer.js";
 import { monthlyReportTemplate } from "../config/EmailTemplate.js";
 
 // Helper: Get expenses for a specific user and month
@@ -81,11 +81,11 @@ const generateAllSimpleReports = async () => {
                 });
 
                 
-                await transport.sendMail({
-                    from: `"ExpenseFlow" <${process.env.SENDER_EMAIL}>`,
+                await sendMail({
+                    from: process.env.SENDER_EMAIL,
                     to: user.email,
                     subject: `Your Monthly Expense Report - ${monthNames[lastMonth]} ${lastYear}`,
-                    html: emailContent
+                    html: emailContent,
                 });
                 successCount++;
 
@@ -156,11 +156,11 @@ const generateAllTransportReports = async () => {
 
                 console.log(`[${user.name}] Sending email to ${user.email}...`);
                 
-                await transport.sendMail({
-                    from: `"ExpenseFlow" <${process.env.SENDER_EMAIL}>`,
+                await sendMail({
+                    from: process.env.SENDER_EMAIL,
                     to: user.email,
                     subject: `Your Monthly Transport Report - ${monthNames[lastMonth]} ${lastYear}`,
-                    html: emailContent
+                    html: emailContent,
                 });
                 
                 console.log(`[${user.name}] ✅ Email sent successfully!`);

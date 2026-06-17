@@ -32,7 +32,6 @@ const ForgotPage = () => {
       setIsEmailSent(true);
       toast.success(response.message || "OTP sent successfully!");
     } catch (error) {
-      console.error("Send OTP error:", error);
       setError(error.response?.data?.message || "Failed to send OTP");
       toast.error(error.response?.data?.message || "Failed to send OTP");
     } finally {

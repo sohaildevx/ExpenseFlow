@@ -1,7 +1,7 @@
 import User from "../model/user.model.js";
 import { validationResult } from "express-validator";
 import { generateToken, setTokenCookie } from "../utils/jsonAuth.js";
-import { transport } from "../config/nodeMailer.js";
+import { sendMail } from "../config/nodeMailer.js";
 import { resetPasswordTemplate } from "../config/EmailTemplate.js";
 import crypto from "crypto";
 
@@ -134,15 +134,12 @@ const resetPassOtp = async (req, res) => {
     user.resetOtpExpiry = Date.now() + 15 * 60 * 1000;
     await user.save();
 
-    const mailOtp = {
+    await sendMail({
       from: process.env.SENDER_EMAIL,
       to: user.email,
       subject: "Password Reset OTP",
-      // text:`Your OTP for password reset is ${otp}. It is valid for 15 minutes. If you did not request this, please ignore this email.`
       html: resetPasswordTemplate.replace("{{OTP_CODE}}", otp),
-    };
-
-    await transport.sendMail(mailOtp);
+    });
 
     res.status(200).json({ message: "OTP sent to your email" });
   } catch (error) {
@@ -163,7 +160,6 @@ const resetPassword = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    console.log(otp);
 
     if (!user.resetOtp || user.resetOtp === "") {
       return res.status(400).json({ message: "No OTP found. Please request a new one." });

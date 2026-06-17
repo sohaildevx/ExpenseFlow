@@ -1,25 +1,17 @@
-import nodeMailer from "nodemailer";
+import { BrevoClient } from "@getbrevo/brevo";
 import dotenv from "dotenv";
 dotenv.config();
 
-const transport = nodeMailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT),
-    secure: false,
-    auth: {
-        user: process.env.SMPT_LOGIN,
-        pass: process.env.SMPT_KEY
-    },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 30000,
-    pool: true,
-    maxConnections: 5,
-    maxMessages: 10,
-    debug: false,
-    logger: false
-})
+const client = new BrevoClient({ apiKey: process.env.BREVO_API_KEY });
 
-export {
-    transport
-}
+const sendMail = async ({ from, to, subject, html }) => {
+  const result = await client.transactionalEmails.sendTransacEmail({
+    sender: { email: from },
+    to: [{ email: to }],
+    subject,
+    htmlContent: html,
+  });
+  return result;
+};
+
+export { sendMail };

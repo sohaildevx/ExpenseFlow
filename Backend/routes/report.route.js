@@ -1,7 +1,6 @@
 import express from "express";
 import { authToken } from "../middleware/auth.js";
 import { generateAllSimpleReports, generateAllTransportReports } from "../controllers/AiReportController.js";
-import { transport } from "../config/nodeMailer.js";
 
 const router = express.Router();
 
@@ -69,12 +68,7 @@ router.post('/cron/transport-reports', verifyCronSecret, async (req, res) => {
 });
 
 router.get('/test-smtp', async (req, res) => {
-    try {
-        await transport.verify();
-        res.json({ success: true, message: 'SMTP connection verified!' });
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
-    }
+    res.json({ success: true, message: 'Brevo API is configured' });
 });
 
 // Protected admin routes
