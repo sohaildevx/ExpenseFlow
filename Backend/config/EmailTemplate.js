@@ -95,6 +95,12 @@ export const resetPasswordTemplate = `
 
 export const monthlyReportTemplate = ({ userName, month, year, analysis, stats, reportType }) => {
   const isPersonal = reportType === 'personal';
+
+  const walletIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>`;
+
+  const truckIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>`;
+
+  const chartIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>`;
   
   return `
 <!DOCTYPE html>
@@ -252,7 +258,7 @@ export const monthlyReportTemplate = ({ userName, month, year, analysis, stats, 
 <body>
   <div class="container">
     <div class="header">
-      <h1>${isPersonal ? '💰' : '🚛'} ${month} ${year} Report</h1>
+      <h1>${isPersonal ? walletIcon : truckIcon} ${month} ${year} Report</h1>
       <p>Hello ${userName}!</p>
     </div>
 
@@ -296,7 +302,7 @@ export const monthlyReportTemplate = ({ userName, month, year, analysis, stats, 
 
     <div class="content">
       <h2 style="font-size: 22px; font-weight: 900; text-transform: uppercase; margin-bottom: 15px;">
-        📊 AI-Powered Analysis
+        ${chartIcon} AI-Powered Analysis
       </h2>
 
       <div class="analysis-section">
