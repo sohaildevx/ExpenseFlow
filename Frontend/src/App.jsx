@@ -12,9 +12,9 @@ function App() {
       <AuthProvider>
         <TripProvider>
           <SimpleExpenseContextProvider>
-          <RazorpayProvider>
-          <AppRoutes />
-          </RazorpayProvider>
+            <RazorpayProvider>
+              <AppRoutes />
+            </RazorpayProvider>
           </SimpleExpenseContextProvider>
         </TripProvider>
       </AuthProvider>

@@ -2,19 +2,20 @@ import { Routes, Route } from "react-router-dom";
 import { Login, Home, Dashboard, ForgotPage, SignUp,AddTrip, View, EditTrip, Supporters, AllTrips, VerifyEmail } from "../pages/pages.js";
 import {ExpenseDashboard, AddExpense, Budget, AllExpensesPage} from '../../Expense/page.js';
 import ProtectedRoute from "./ProtectedRoute.jsx";
+import ServerWaking from "../Components/ServerWaking.jsx";
 
 const AppRoutes = () => {
   return (
     <div>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/login" element={<ServerWaking><Login /></ServerWaking>} />
+        <Route path="/signup" element={<ServerWaking><SignUp /></ServerWaking>} />
+        <Route path="/verify-email" element={<ServerWaking><VerifyEmail /></ServerWaking>} />
         <Route
           path="/forgot"
           element={
-              <ForgotPage />
+            <ServerWaking><ForgotPage /></ServerWaking>
           }
         />
         <Route

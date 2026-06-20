@@ -38,6 +38,10 @@ app.use(cors({
 }));
 
 
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 app.get('/', (req, res) => {
   res.send('Expense Tracker Backend is running');
 });
