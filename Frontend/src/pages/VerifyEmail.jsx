@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "../context/AuthContext";
@@ -17,6 +17,14 @@ const VerifyEmail = () => {
   const { verifyEmail, resendVerificationOtp } = useAuth();
 
   const inputRefs = useRef([]);
+  const otpSent = useRef(false);
+
+  useEffect(() => {
+    if (emailFromSignup && !otpSent.current) {
+      otpSent.current = true;
+      handleResend();
+    }
+  }, []);
 
   const handleOtpChange = (e, index) => {
     const value = e.target.value;
