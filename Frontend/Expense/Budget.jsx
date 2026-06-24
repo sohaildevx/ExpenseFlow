@@ -11,6 +11,8 @@ const Budget = () => {
   const [budgets, setBudgets] = useState([]);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingBudgetId, setEditingBudgetId] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletingBudget, setDeletingBudget] = useState(null);
   const [formData, setFormData] = useState({
     category: 'Food & Drinking',
     limit: '',
@@ -88,20 +90,32 @@ const Budget = () => {
     }
   }
 
-  const handleDelete = async(budgetId)=>{
+  const handleDeleteClick = (budget) => {
+    setDeletingBudget(budget);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async()=>{
      try {
-      const result = await deleteBudget(budgetId);
+      const result = await deleteBudget(deletingBudget._id);
       if(result.success){
         toast.success('Budget deleted successfully!');
+        setShowDeleteModal(false);
+        setDeletingBudget(null);
         await fetchBudgets();
       }else{
         toast.error(result.message || 'Failed to delete budget');
       }
      } catch (error) {
       console.error('Error deleting budget:', error);
-      return {success:false, message: error.response?.data?.message || 'Failed to delete budget'}
+      toast.error('Failed to delete budget');
      }
   }
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setDeletingBudget(null);
+  };
 
   const handleUpdate = async(budgetId, updatedData)=>{
     try {
@@ -362,7 +376,7 @@ const Budget = () => {
                       <button className="p-2 border-4 border-black bg-white hover:bg-yellow-400 transition-colors" onClick={()=>handleEdit(budget)}>
                         <FiEdit2 className="text-lg" />
                       </button>
-                      <button className="p-2 border-4 border-black bg-white hover:bg-red-400 transition-colors" onClick={() => handleDelete(budget._id)}>
+                      <button className="p-2 border-4 border-black bg-white hover:bg-red-400 transition-colors" onClick={() => handleDeleteClick(budget)}>
                         <FiTrash2 className="text-lg" />
                       </button>
                     </div>
@@ -403,6 +417,37 @@ const Budget = () => {
           )}
         </div>
       </main>
+
+      {showDeleteModal && deletingBudget && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6 max-w-md w-full">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-red-100 border-4 border-black mx-auto mb-4 flex items-center justify-center">
+                <FiTrash2 className="text-3xl text-red-500" />
+              </div>
+              <h3 className="font-black text-xl uppercase mb-2">Delete Budget</h3>
+              <p className="font-bold text-sm mb-1">Are you sure you want to delete this budget?</p>
+              <p className="font-bold text-lg mb-4">{deletingBudget.category}</p>
+              <p className="text-xs text-gray-500 mb-6">This will also delete all expenses in this category for this period.</p>
+              
+              <div className="flex gap-4">
+                <button
+                  onClick={handleDeleteConfirm}
+                  className="flex-1 bg-red-500 text-white font-black text-lg uppercase py-3 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all"
+                >
+                  Delete
+                </button>
+                <button
+                  onClick={handleDeleteCancel}
+                  className="flex-1 bg-white text-black font-black text-lg uppercase py-3 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

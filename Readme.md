@@ -1,16 +1,17 @@
-# ExpenseFlow - Dual-Mode Expense Tracker
+# ExpenseFlow - AI-Powered Expense Tracker
 
 <div align="center">
 
 ![ExpenseFlow Banner](.github/ScreenShots/Home.png)
 
-**A modern, full-stack expense tracking application with dual-mode functionality for both transport businesses and personal expense management, plus AI-powered receipts and monthly AI email summaries.**
+**A full-stack expense tracking application with dual-mode functionality for transport businesses and personal expense management, plus AI-powered insights and monthly email reports.**
 
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
-[![React](https://img.shields.io/badge/React-19.2-blue.svg)](https://reactjs.org/)
+[![React](https://img.shields.io/badge/React-19-blue.svg)](https://reactjs.org/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-8.0-brightgreen.svg)](https://www.mongodb.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-[Live Demo](https://myexpenseflow.vercel.app/) | [Report Bug](#) | [Request Feature](#)
+[Live Demo](https://myexpenseflow.vercel.app/) | [Report Bug](https://github.com/yourusername/expense-tracker/issues) | [Request Feature](https://github.com/yourusername/expense-tracker/issues)
 
 </div>
 
@@ -33,77 +34,91 @@
 
 ---
 
+## Problem Statement
+
+Managing expenses—whether personal or for a transport business—is messy. People lose track of where their money goes, budgets get overspent without warning, and transport owners struggle to calculate trip profitability with scattered data.
+
+**The core problems:**
+- **No spending visibility** — People don't know where their money goes each month
+- **Budget overspending** — No alerts when approaching or exceeding budget limits
+- **Scattered records** — Expenses tracked in notebooks, spreadsheets, or not at all
+- **Manual tracking** — Tedious data entry leads to inconsistent or no tracking
+- **No business insights** — Transport owners can't calculate per-trip profit/loss
+- **Lost receipts** — Paper receipts get lost, making reimbursement and tax filing harder
+- **No automated reporting** — No monthly summaries or AI-powered spending insights
+
+**ExpenseFlow solves this by providing:**
+- A centralized platform to track all expenses with categories
+- Real-time budget alerts with visual progress bars
+- AI-powered spending analysis and monthly email reports
+- Receipt scanning with automatic data extraction
+- Dual-mode for both personal and transport business tracking
+- Clean dashboards with charts and analytics
+
+---
+
 ## Features
 
-### Core Features
-- **Secure Authentication** - JWT-based auth with httpOnly cookies
-- **Dual User Modes** - Choose between Transport Business or Personal tracking
-- **Real-time Analytics** - Dynamic dashboards with category breakdowns
-- **Payment Integration** - Razorpay payment gateway for donations/subscriptions
-- **Responsive Design** - Brutalist UI that works on all devices
-- **Cloud Storage** - Receipt uploads via Cloudinary
-- **AI Receipt Scanning** - Automatic expense data extraction from receipt images using OpenAI Vision API
-- **Monthly AI Email Reports** - Automatic monthly summaries with AI insights on spending, budgets, and recommendations
+### Authentication & Security
+- JWT-based auth with httpOnly cookies
+- Email verification with OTP
+- Password reset with OTP
+- Input validation with express-validator
+- Multi-tenant data isolation
 
-### Transport Mode Features
+### Transport Mode
 - Trip expense tracking with detailed breakdowns
 - Fuel, maintenance, and toll management
 - Trip-wise profit/loss calculation
 - Receipt upload for each trip
-- Date range filtering
 - Multiple receipt management per trip
 
-### Personal Mode Features
+### Personal Mode
 - Daily expense tracking across 11+ categories
 - Budget management with visual progress bars and alerts
-- Monthly spending analytics and AI email summaries
+- Monthly spending analytics
 - Recurring expense support
-- Tag-based organization
 - Payment method tracking (Cash, UPI, Card, etc.)
-- AI-powered receipt scanning with automatic form filling
 
-### Security Features
-- Password hashing with bcrypt
-- JWT token authentication
-- HTTP-only cookies
-- CORS protection
-- Input validation with express-validator
-- Multi-tenant data isolation
+### AI Features
+- Receipt scanning with OpenAI Vision API
+- Monthly AI email reports with spending insights
+- Automated report generation via cron jobs
+
+### General
+- Real-time analytics dashboards
+- Cloud storage via Cloudinary
+- Payment integration with Razorpay
+- Responsive brutalist UI design
 
 ---
 
 ## Tech Stack
 
 ### Backend
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
-![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
-![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
-
-- **Runtime**: Node.js v18+
-- **Framework**: Express.js v5
-- **Database**: MongoDB with Mongoose ODM
-- **Authentication**: JSON Web Tokens (JWT)
-- **Payment**: Razorpay
-- **Storage**: Cloudinary
-- **Email**: Nodemailer
-- **Validation**: express-validator
-- **AI**: OpenAI API (GPT-4o Vision)
+| Technology | Purpose |
+|-----------|---------|
+| Node.js v18+ | Runtime |
+| Express.js v5 | Framework |
+| MongoDB + Mongoose | Database & ODM |
+| JWT | Authentication |
+| Brevo API | Email service |
+| Cloudinary | File storage |
+| Razorpay | Payments |
+| OpenAI API | AI receipt scanning |
+| express-validator | Input validation |
 
 ### Frontend
-![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
-![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-
-- **Library**: React 19.2
-- **Build Tool**: Vite
-- **Styling**: TailwindCSS v4 (Brutalist Design)
-- **Routing**: React Router v7
-- **State**: Context API
-- **HTTP Client**: Axios
-- **Charts**: Recharts
-- **Icons**: React Icons, Lucide React
-- **PDF Export**: jsPDF, html2canvas
+| Technology | Purpose |
+|-----------|---------|
+| React 19 | UI library |
+| Vite | Build tool |
+| Tailwind CSS v4 | Styling (Brutalist UI) |
+| React Router v7 | Routing |
+| Context API | State management |
+| Axios | HTTP client |
+| Recharts | Charts |
+| React Icons | Icons |
 
 ---
 
@@ -118,8 +133,8 @@
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/expense-tracker-transport.git
-cd expense-tracker-transport
+git clone https://github.com/sohaildevx/ExpenseFlow.git
+cd ExpenseFlow
 ```
 
 2. **Backend Setup**
@@ -128,44 +143,23 @@ cd Backend
 npm install
 ```
 
-Create `.env` file in Backend directory:
+Create `.env` file:
 ```env
-# Server
 PORT=8000
 NODE_ENV=development
-
-# Database
 MONGODB_URI=mongodb://localhost:27017/expenseflow
-# Or MongoDB Atlas:
-# MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/expenseflow
-
-# JWT
-JWT_SECRET=your_super_secret_jwt_key_here
-
-# Cloudinary
+JWT_SECRET=your_jwt_secret
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
-
-# Email (Nodemailer)
 SENDER_EMAIL=your_email@gmail.com
-EMAIL_PASSWORD=your_app_password
-
-# Razorpay
+BREVO_API_KEY=your_brevo_api_key
 RAZORPAY_KEY_ID=your_razorpay_key_id
 RAZORPAY_KEY_SECRET=your_razorpay_secret
-
-# OpenAI
 OPENAI_API_KEY=your_openai_api_key
-
-# Frontend URLs
+CRON_SECRET=your_cron_secret
 LOCALFRONTEND=http://localhost:5173
 FRONTEND=https://your-deployed-frontend.vercel.app
-```
-
-Start backend server:
-```bash
-npm run dev
 ```
 
 3. **Frontend Setup**
@@ -174,18 +168,24 @@ cd Frontend
 npm install
 ```
 
-Create `.env` file in Frontend directory:
+Create `.env` file:
 ```env
 VITE_API_URL=http://localhost:8000
 VITE_RAZORPAY_KEY_ID=your_razorpay_key_id
 ```
 
-Start frontend:
+4. **Run the app**
 ```bash
+# Backend
+cd Backend
+npm run dev
+
+# Frontend (new terminal)
+cd Frontend
 npm run dev
 ```
 
-4. **Access the application**
+5. **Access**
 - Frontend: http://localhost:5173
 - Backend: http://localhost:8000
 
@@ -194,22 +194,25 @@ npm run dev
 ## Project Structure
 
 ```
-Expense-Tracker-Transport/
+Ai-Expense-Tracker/
 ├── Backend/
+│   ├── __tests__/              # Unit tests
 │   ├── config/
-│   │   ├── EmailTemplate.js
-│   │   ├── nodeMailer.js
-│   │   └── Razorpay.js
+│   │   ├── cronJobs.js         # Cron job scheduler
+│   │   ├── EmailTemplate.js    # Email HTML templates
+│   │   ├── nodeMailer.js       # Brevo email service
+│   │   └── Razorpay.js         # Razorpay config
 │   ├── controllers/
+│   │   ├── AiReportController.js
 │   │   ├── budget.controllers.js
 │   │   ├── expense.controllers.js
 │   │   ├── razorpay.controllers.js
 │   │   ├── trip.controllers.js
 │   │   └── user.controllers.js
 │   ├── DB/
-│   │   └── Db.js
+│   │   └── Db.js               # MongoDB connection
 │   ├── middleware/
-│   │   └── auth.js
+│   │   └── auth.js             # JWT auth middleware
 │   ├── model/
 │   │   ├── budget.model.js
 │   │   ├── expense.model.js
@@ -220,19 +223,21 @@ Expense-Tracker-Transport/
 │   │   ├── budget.route.js
 │   │   ├── expense.route.js
 │   │   ├── razorpay.Route.js
+│   │   ├── report.route.js
 │   │   ├── trip.routes.js
 │   │   └── user.routes.js
 │   ├── service/
-│   │   └── OpenAi.js
+│   │   ├── AiAnalyzer.js       # AI analysis service
+│   │   └── OpenAi.js           # OpenAI API integration
 │   ├── utils/
-│   │   ├── cloudinary.js
-│   │   └── jsonAuth.js
-│   ├── app.js
-│   ├── server.js
+│   │   ├── cloudinary.js       # Cloudinary upload
+│   │   └── jsonAuth.js         # JWT token utilities
+│   ├── app.js                  # Express app setup
+│   ├── server.js               # Server entry point
 │   └── package.json
 │
 └── Frontend/
-    ├── Expense/
+    ├── Expense/                # Personal expense pages
     │   ├── AddExpense.jsx
     │   ├── AllExpensesPage.jsx
     │   ├── Budget.jsx
@@ -243,6 +248,7 @@ Expense-Tracker-Transport/
     │   │   ├── Footer.jsx
     │   │   ├── Header.jsx
     │   │   ├── Hero.jsx
+    │   │   ├── ServerWaking.jsx
     │   │   └── index.js
     │   ├── config/
     │   │   └── Axios.js
@@ -259,11 +265,12 @@ Expense-Tracker-Transport/
     │   │   ├── ForgotPage.jsx
     │   │   ├── Home.jsx
     │   │   ├── Login.jsx
-    │   │   ├── pages.js
     │   │   ├── SignUp.jsx
+    │   │   ├── VerifyEmail.jsx
     │   │   ├── SupportButton.jsx
     │   │   ├── SupportPage.jsx
-    │   │   └── View.jsx
+    │   │   ├── View.jsx
+    │   │   └── pages.js
     │   ├── routes/
     │   │   ├── AppRoutes.jsx
     │   │   └── ProtectedRoute.jsx
@@ -281,149 +288,85 @@ Expense-Tracker-Transport/
 
 ## API Endpoints
 
-### Authentication
-```
-POST   /user/register          - Create new account
-POST   /user/login             - User login
-POST   /user/logout            - User logout
-GET    /user/getCurrentUser    - Get authenticated user
-POST   /user/send-reset-otp    - Request password reset OTP
-POST   /user/reset-password    - Reset password with OTP
-```
+### Authentication (`/user`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/register` | Create new account |
+| POST | `/login` | User login |
+| POST | `/logout` | User logout |
+| GET | `/getCurrentUser` | Get authenticated user |
+| POST | `/send-reset-otp` | Request password reset OTP |
+| POST | `/verify-reset-otp` | Verify reset OTP |
+| POST | `/reset-password` | Reset password with OTP |
+| POST | `/verify-email` | Verify email with OTP |
+| POST | `/resend-verification-otp` | Resend verification OTP |
 
-### Trip Expenses (Transport Mode)
-```
-POST   /trip/trip-expense      - Create new trip
-GET    /trip/trip-expenses     - Get all user trips
-GET    /trip/trip-expense/:id  - Get single trip details
-PUT    /trip/:id               - Update trip
-DELETE /trip/:id               - Delete trip
-POST   /trip/:id/receipt       - Upload receipt for trip
-DELETE /trip/:id/receipt/:receiptId - Delete receipt
-GET    /trip/:id/receipts      - Get all receipts for trip
-```
+### Trip Expenses (`/trip`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/trip-expense` | Create new trip |
+| GET | `/trip-expenses` | Get all user trips |
+| GET | `/trip-expense/:id` | Get single trip |
+| PUT | `/:id` | Update trip |
+| DELETE | `/:id` | Delete trip |
+| POST | `/:id/receipt` | Upload receipt |
+| DELETE | `/:id/receipt/:receiptId` | Delete receipt |
+| GET | `/:id/receipts` | Get all receipts |
 
-### Personal Expenses (Simple Mode)
-```
-POST   /expense/               - Create expense
-POST   /expense/scan-receipt  - Scan receipt image with AI
-POST   /expense/:id/receipt   - Upload receipt for expense
-GET    /expense/               - Get all expenses (with filters)
-GET    /expense/statistics     - Get spending analytics
-GET    /expense/:id            - Get single expense
-PUT    /expense/:id            - Update expense
-DELETE /expense/:id            - Delete expense
-```
+### Personal Expenses (`/expense`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/` | Create expense |
+| POST | `/scan-receipt` | Scan receipt with AI |
+| POST | `/:id/receipt` | Upload receipt |
+| GET | `/` | Get all expenses |
+| GET | `/statistics` | Get spending analytics |
+| GET | `/:id` | Get single expense |
+| PUT | `/:id` | Update expense |
+| DELETE | `/:id` | Delete expense |
 
-### Budget Management
-```
-POST   /budget/addBudget       - Create budget
-GET    /budget/getBudget/:id   - Get single budget
-GET    /budget/getAllBudgets   - Get all budgets
-PUT    /budget/updateBudget/:id - Update budget
-DELETE /budget/deleteBudget/:id - Delete budget
-```
+### Budget Management (`/budget`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/addBudget` | Create budget |
+| GET | `/getBudget/:id` | Get single budget |
+| GET | `/getAllBudgets` | Get all budgets |
+| PUT | `/updateBudget/:id` | Update budget |
+| DELETE | `/deleteBudget/:id` | Delete budget |
 
-### Payment (Razorpay)
-```
-POST   /razorpay/create-order  - Create payment order
-POST   /razorpay/verify-payment - Verify payment signature
-GET    /razorpay/supporters    - Get supporters list
-GET    /razorpay/payments      - Get payment history
-```
+### Payments (`/razorpay`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/create-order` | Create payment order |
+| POST | `/verify-payment` | Verify payment |
+| GET | `/supporters` | Get supporters list |
+| GET | `/payments` | Get payment history |
 
----
-
-## Design Philosophy
-
-ExpenseFlow uses a **Brutalist Design** approach:
-- **Bold Typography** - Thick, uppercase fonts for maximum impact
-- **Strong Borders** - 4-8px black borders on all elements
-- **Harsh Shadows** - Drop shadows for depth
-- **Limited Colors** - Yellow, black, and white palette
-- **No Gradients** - Flat, solid colors only
-- **Sharp Corners** - No border-radius
-- **Maximum Contrast** - Easy readability
-
----
-
-## Environment Variables
-
-### Backend (.env)
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `PORT` | Server port | Yes |
-| `MONGODB_URI` | MongoDB connection string | Yes |
-| `JWT_SECRET` | Secret key for JWT tokens | Yes |
-| `CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name | Yes |
-| `CLOUDINARY_API_KEY` | Cloudinary API key | Yes |
-| `CLOUDINARY_API_SECRET` | Cloudinary API secret | Yes |
-| `SENDER_EMAIL` | Email for sending OTPs | Yes |
-| `EMAIL_PASSWORD` | Email app password | Yes |
-| `RAZORPAY_KEY_ID` | Razorpay key ID | Yes |
-| `RAZORPAY_KEY_SECRET` | Razorpay secret | Yes |
-| `OPENAI_API_KEY` | OpenAI API key for receipt scanning | Yes |
-| `LOCALFRONTEND` | Local frontend URL | Yes |
-| `FRONTEND` | Production frontend URL | No |
-
-### Frontend (.env)
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `VITE_API_URL` | Backend API URL | Yes |
-| `VITE_RAZORPAY_KEY_ID` | Razorpay public key | Yes |
-
----
-
-## Testing
-
-```bash
-# Backend tests (coming soon)
-cd Backend
-npm test
-
-# Frontend tests (coming soon)
-cd Frontend
-npm test
-```
-
----
-
-## Deployment
-
-### Backend (Render/Railway/Heroku)
-1. Push code to GitHub
-2. Connect repository to Render/Railway
-3. Add environment variables
-4. Deploy
-
-### Frontend (Vercel/Netlify)
-1. Push code to GitHub
-2. Connect repository to Vercel
-3. Add environment variables
-4. Deploy
+### Reports (`/report`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/cron/simple-reports` | Generate simple reports (cron) |
+| POST | `/cron/transport-reports` | Generate transport reports (cron) |
+| GET | `/test-smtp` | Test email config |
 
 ---
 
 ## Contributing
 
-Contributions are welcome! Please follow these steps:
-
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
 ---
 
-## Acknowledgments
+## License
 
-- Icons from [React Icons](https://react-icons.github.io/react-icons/)
-- Charts from [Recharts](https://recharts.org/)
-- Payment gateway by [Razorpay](https://razorpay.com/)
-- AI capabilities powered by [OpenAI](https://openai.com/)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
+
 
 <div align="center">
 
