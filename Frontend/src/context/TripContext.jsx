@@ -14,6 +14,13 @@ export const TripProvider = ({children}) => {
     pendingAmount: 0
   });
 
+  const parseError = (error) => {
+    const data = error.response?.data;
+    if (data?.message) return data.message;
+    if (data?.errors?.length) return data.errors.map(e => e.msg).join(', ');
+    return 'Something went wrong. Please try again.';
+  };
+
   const addTrip = async(tripData)=>{
        try {
           setLoading(true);
@@ -22,7 +29,7 @@ export const TripProvider = ({children}) => {
           return { success: true, data: response.data };
        } catch (error) {
           console.error("Add trip error:", error);
-          return { success: false, message: error.response?.data?.message || 'Failed to add trip' };
+          return { success: false, message: parseError(error) };
        } finally {
           setLoading(false);
        }
@@ -41,7 +48,8 @@ export const TripProvider = ({children}) => {
       calculateStats(update);
       return { success: true, data: response.data };
     } catch (error) {
-      return { success: false, message: errorMsg };
+      console.error("Update trip error:", error);
+      return { success: false, message: parseError(error) };
     } finally {
       setLoading(false);
     }
@@ -56,7 +64,7 @@ export const TripProvider = ({children}) => {
       return { success: true, data: response.data };
     } catch (error) {
       console.error("Delete trip error:", error);
-      return { success: false, message: error.response?.data?.message || 'Failed to delete trip' };
+      return { success: false, message: parseError(error) };
     } finally {
       setLoading(false);
     }
@@ -83,7 +91,7 @@ export const TripProvider = ({children}) => {
       return { success: true, trip: response.data.trip };
     } catch (error) {
       console.error('Fetch single trip error:', error);
-      return { success: false, message: error.response?.data?.message || 'Failed to fetch trip' };
+      return { success: false, message: parseError(error) };
     } finally {
       setLoading(false);
     }
@@ -101,7 +109,8 @@ export const TripProvider = ({children}) => {
       });
       return { success: true, data: response.data };
     } catch (error) {
-      return { success: false, message: error.response?.data?.message || 'Failed to upload receipts' };
+      console.error("Upload receipt error:", error);
+      return { success: false, message: parseError(error) };
     } finally {
       setLoading(false);
     }
@@ -113,7 +122,8 @@ export const TripProvider = ({children}) => {
         const response = await axios.delete(`/trip/${tripId}/receipt/${receiptId}`);
         return { success: true, data: response.data };
        } catch (error) {
-        return { success: false, message: error.response?.data?.message || 'Failed to delete receipt' };
+        console.error("Delete receipt error:", error);
+        return { success: false, message: parseError(error) };
        } finally {
         setLoading(false);
        }
@@ -132,7 +142,7 @@ export const TripProvider = ({children}) => {
       return { 
         success: false, 
         receipts: [],
-        message: error.response?.data?.message || 'Failed to get receipts'
+        message: parseError(error)
       };
     } finally {
       setLoading(false);
@@ -204,5 +214,3 @@ export const useTrip = ()=>{
     }
     return context;
 }
-
-

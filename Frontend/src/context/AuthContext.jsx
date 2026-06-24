@@ -7,6 +7,13 @@ export const AuthProvider = ({children}) => {
     const [user,setUser]=useState(null);
     const [loading,setLoading]=useState(true);
     const [isAuthenticated,setIsAuthenticated]=useState(false);
+
+    const parseError = (error) => {
+        const data = error.response?.data;
+        if (data?.message) return data.message;
+        if (data?.errors?.length) return data.errors.map(e => e.msg).join(', ');
+        return 'Something went wrong. Please try again.';
+    };
  
     useEffect(()=>{
         checkAuth();
@@ -36,10 +43,7 @@ export const AuthProvider = ({children}) => {
             if (error.response?.status === 403 && error.response?.data?.needsVerification) {
                 return {success: false, needsVerification: true, email: error.response.data.email, message: error.response.data.message};
             }
-            return{
-                success: false,
-                message: error.response?.data?.message || 'Login failed'
-            }
+            return{ success: false, message: parseError(error) }
          }   
     }
 
@@ -48,10 +52,7 @@ export const AuthProvider = ({children}) => {
             const response = await axios.post('/user/register',{name,email,password,userType});
             return {success: true, email: response.data.email};
         }catch(error){
-            return{
-                success: false,
-                message: error.response?.data?.message || 'Registration failed'
-            }
+            return{ success: false, message: parseError(error) }
         }
     }
 
@@ -64,12 +65,10 @@ export const AuthProvider = ({children}) => {
         } catch (error) {
             return {
                 success: false,
-                message: error.response?.data?.message || 'Logout failed'
+                message: parseError(error)
             }
         }
     }
-
-    //Reset password function's added here
 
     const resetPassword = async(email, otp, newPassword)=>{
         try {
@@ -77,7 +76,7 @@ export const AuthProvider = ({children}) => {
             const reponse = await axios.post('/user/reset-password',{email, otp, newPassword});
             return {success:true, message: reponse.data.message || 'Password reset successful'};
         } catch (error) {
-            return{success:false, message: error.response?.data?.message || 'Password reset failed'};
+            return{success:false, message: parseError(error)};
         }
     }
 
@@ -87,7 +86,7 @@ export const AuthProvider = ({children}) => {
             const response = await axios.post('/user/send-reset-otp',{email});
             return {success:true, message: response.data.message || 'OTP sent successfully'};
         }catch(error){ 
-            return {success:false, message: error.response?.data?.message || 'Failed to send OTP'};
+            return {success:false, message: parseError(error)};
         }
 
     }
@@ -97,7 +96,7 @@ export const AuthProvider = ({children}) => {
             const response = await axios.post('/user/verify-reset-otp',{email, otp});
             return {success:true, message: response.data.message || 'OTP verified'};
         }catch(error){
-            return {success:false, message: error.response?.data?.message || 'Failed to verify OTP'};
+            return {success:false, message: parseError(error)};
         }
     }
 
@@ -106,7 +105,7 @@ export const AuthProvider = ({children}) => {
             const response = await axios.post('/user/verify-email',{email, otp});
             return {success:true, message: response.data.message || 'Email verified'};
         }catch(error){
-            return {success:false, message: error.response?.data?.message || 'Failed to verify email'};
+            return {success:false, message: parseError(error)};
         }
     }
 
@@ -115,7 +114,7 @@ export const AuthProvider = ({children}) => {
             const response = await axios.post('/user/resend-verification-otp',{email});
             return {success:true, message: response.data.message || 'OTP sent successfully'};
         }catch(error){
-            return {success:false, message: error.response?.data?.message || 'Failed to send OTP'};
+            return {success:false, message: parseError(error)};
         }
     }
 

@@ -6,7 +6,7 @@ import { cloudinary } from "../utils/cloudinary.js";
 const createExpense = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(400).json({ errors: errors.array().map(e => ({ ...e, value: undefined })) });
     }
 
     try {
@@ -20,7 +20,8 @@ const createExpense = async (req, res) => {
         const newExpense = await Expense.create(expenseData);
         return res.status(201).json({ message: "Expense created successfully", newExpense });
     } catch (error) {
-        return res.status(500).json({ message: "Failed to create expense" });
+        console.error("Create expense error:", error.message);
+        return res.status(500).json({ message: "Something went wrong. Please try again." });
     }
 }
 
@@ -53,7 +54,8 @@ const getAllExpense = async (req, res) => {
 
         return res.status(200).json({ expenses, total });
      } catch (error) {
-        return res.status(500).json({ message: "Failed to retrieve expenses" });
+        console.error("Get expenses error:", error.message);
+        return res.status(500).json({ message: "Something went wrong. Please try again." });
      }
 }
 
@@ -68,7 +70,8 @@ const expenseById = async (req,res)=>{
         }
         return res.status(200).json({ expense });
     } catch (error) {
-        return res.status(500).json({ message: "Failed to retrieve expense" });
+        console.error("Get expense error:", error.message);
+        return res.status(500).json({ message: "Something went wrong. Please try again." });
     }
 }
 
@@ -83,7 +86,8 @@ const deleteExpense = async (req,res)=>{
         }
         return res.status(200).json({ message: "Expense deleted successfully" });
     } catch (error) {
-        return res.status(500).json({ message: "Failed to delete expense" });
+        console.error("Delete expense error:", error.message);
+        return res.status(500).json({ message: "Something went wrong. Please try again." });
     }
 }
 
@@ -102,7 +106,8 @@ const updateExpense = async (req,res)=>{
         }
         return res.status(200).json({ message: "Expense updated successfully", updatedExpense });
     } catch (error) {
-        return res.status(500).json({ message: "Failed to update expense" });
+        console.error("Update expense error:", error.message);
+        return res.status(500).json({ message: "Something went wrong. Please try again." });
     }
 }
 
@@ -174,8 +179,9 @@ const getExpenseStats = async (req, res) => {
             }
         });
     } catch (error) {
+        console.error("Get expense stats error:", error.message);
         return res.status(500).json({ 
-            message: "Failed to get expense statistics"
+            message: "Something went wrong. Please try again."
         });
     }
 }
@@ -201,8 +207,9 @@ const scanReceipt = async (req, res) => {
             }
         });
     } catch (error) {
+        console.error("Scan receipt error:", error.message);
         return res.status(500).json({ 
-            message: "Failed to scan receipt", 
+            message: "Failed to scan receipt. Please try again.", 
         });
     }
 };
@@ -236,8 +243,9 @@ const uploadReceipt = async (req, res) => {
             receipt: expense.receipt 
         });
     } catch (error) {
+        console.error("Upload receipt error:", error.message);
         return res.status(500).json({ 
-            message: "Failed to upload receipt"
+            message: "Failed to upload receipt. Please try again."
         });
     }
 };

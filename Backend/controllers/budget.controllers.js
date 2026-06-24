@@ -5,7 +5,7 @@ import { validationResult } from 'express-validator';
 export const createBudget = async(req,res)=>{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(400).json({ errors: errors.array().map(e => ({ ...e, value: undefined })) });
     }
 
     try {
@@ -22,7 +22,8 @@ export const createBudget = async(req,res)=>{
         })
         return res.status(201).json({ message: "Budget created successfully", newBudget });
     } catch (error) {
-        return res.status(500).json({ message: "Failed to create budget"});
+        console.error("Create budget error:", error.message);
+        return res.status(500).json({ message: "Something went wrong. Please try again."});
     }
 }
 
@@ -54,7 +55,8 @@ export const getBudget = async(req,res)=>{
         
         return res.status(200).json({message: "Budget fetched successfully", budget: budgetWithSpent});
     } catch (error) {
-        return res.status(500).json({ message: "Failed to get budget"});
+        console.error("Get budget error:", error.message);
+        return res.status(500).json({ message: "Something went wrong. Please try again."});
     }
 }
 
@@ -89,14 +91,15 @@ export const getAllBudgets = async(req,res)=>{
         
         return res.status(200).json({budgets: budgetsWithSpent, count: budgetsWithSpent.length});
     }catch(error){
-        return res.status(500).json({ message: "Failed to get budgets" });
+        console.error("Get all budgets error:", error.message);
+        return res.status(500).json({ message: "Something went wrong. Please try again." });
     }
 }
 
 export const updateBudget = async(req,res)=>{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(400).json({ errors: errors.array().map(e => ({ ...e, value: undefined })) });
     }
 
     const {id} = req.params;
@@ -121,7 +124,8 @@ export const updateBudget = async(req,res)=>{
         }
         return res.status(200).json({message: "Budget updated successfully", updatedBudget});
     } catch (error) {
-        return res.status(500).json({ message: "Failed to update budget" });
+        console.error("Update budget error:", error.message);
+        return res.status(500).json({ message: "Something went wrong. Please try again." });
     }
 }
 
@@ -146,6 +150,7 @@ export const deleteBudget = async(req,res)=>{
         
         return res.status(200).json({message: "Budget deleted successfully"});
     } catch (error) {
-        return res.status(500).json({ message: "Failed to delete budget" });
+        console.error("Delete budget error:", error.message);
+        return res.status(500).json({ message: "Something went wrong. Please try again." });
     }
 }

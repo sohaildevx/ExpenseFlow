@@ -22,7 +22,7 @@ const createUser = async (req, res) => {
   try {
     const exist = await User.findOne({ email });
     if (exist) {
-      return res.status(409).json({ message: "User already exists" });
+      return res.status(409).json({ message: "An account with this email already exists" });
     }
 
     const user = await User.create({ name, email, password, userType });
@@ -32,18 +32,24 @@ const createUser = async (req, res) => {
     user.verifyOtpExpiry = Date.now() + 15 * 60 * 1000;
     await user.save();
 
-    await sendMail({
-      from: process.env.SENDER_EMAIL,
-      to: user.email,
-      subject: "Verify Your Email - ExpenseFlow",
-      html: emailVerificationTemplate(otp),
-    });
+    try {
+      await sendMail({
+        from: process.env.SENDER_EMAIL,
+        to: user.email,
+        subject: "Verify Your Email - ExpenseFlow",
+        html: emailVerificationTemplate(otp),
+      });
+    } catch (mailError) {
+      console.error("Failed to send verification email:", mailError.message);
+      return res.status(201).json({ message: "Account created but verification email failed. Please use Resend OTP.", email: user.email });
+    }
 
     return res
       .status(201)
       .json({ message: "Account created. Please verify your email.", email: user.email });
   } catch (error) {
-    res.status(500).json({ message: "User creation failed" });
+    console.error("Create user error:", error.message);
+    res.status(500).json({ message: "Something went wrong. Please try again." });
   }
 };
 
@@ -62,7 +68,7 @@ const loginUser = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(401).json({ message: "Invalid email or password" });
     }
 
     if (!user.isEmailVerified) {
@@ -71,7 +77,7 @@ const loginUser = async (req, res) => {
 
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid Password" });
+      return res.status(401).json({ message: "Invalid email or password" });
     }
 
     const payload = {
@@ -87,7 +93,8 @@ const loginUser = async (req, res) => {
       .status(200)
       .json({ message: "Login successful", user: { name: user.name, email: user.email, id: user._id, userType: user.userType } });
   } catch (error) {
-    res.status(500).json({ message: "Failed to login" });
+    console.error("Login error:", error.message);
+    res.status(500).json({ message: "Something went wrong. Please try again." });
   }
 };
 
@@ -109,7 +116,8 @@ const getCurrentUser = async (req, res) => {
     createdAt: user.createdAt
   } });
   } catch (error) {
-    return res.status(500).json({ message: "Failed to get current user" });
+    console.error("Get user error:", error.message);
+    return res.status(500).json({ message: "Something went wrong" });
   }
 };
 
@@ -122,7 +130,8 @@ const logOutUser = async (req, res) => {
     });
     return res.status(200).json({ message: "Logout successful" });
   } catch (error) {
-    return res.status(500).json({ message: "Failed to logout" });
+    console.error("Logout error:", error.message);
+    return res.status(500).json({ message: "Something went wrong" });
   }
 };
 
@@ -157,7 +166,8 @@ const resetPassOtp = async (req, res) => {
 
     res.status(200).json({ message: "OTP sent to your email" });
   } catch (error) {
-    return res.status(500).json({ message: "Failed to send OTP" });
+    console.error("Send reset OTP error:", error.message);
+    return res.status(500).json({ message: "Something went wrong. Please try again." });
   }
 };
 
@@ -192,7 +202,8 @@ const verifyResetOtp = async (req, res) => {
 
     res.status(200).json({ message: "OTP verified successfully" });
   } catch (error) {
-    return res.status(500).json({ message: "Failed to verify OTP" });
+    console.error("Verify reset OTP error:", error.message);
+    return res.status(500).json({ message: "Something went wrong. Please try again." });
   }
 };
 
@@ -229,9 +240,10 @@ const resetPassword = async (req, res) => {
     await user.save();
     res.status(200).json({ message: "Password reset successful" });
   } catch (error) {
+    console.error("Reset password error:", error.message);
     return res
       .status(500)
-      .json({ message: "Something went wrong while changing password" });
+      .json({ message: "Something went wrong. Please try again." });
   }
 };
 
@@ -275,7 +287,8 @@ const verifyEmail = async (req, res) => {
 
     res.status(200).json({ message: "Email verified successfully" });
   } catch (error) {
-    return res.status(500).json({ message: "Failed to verify email" });
+    console.error("Verify email error:", error.message);
+    return res.status(500).json({ message: "Something went wrong. Please try again." });
   }
 };
 
@@ -311,7 +324,8 @@ const resendVerificationOtp = async (req, res) => {
 
     res.status(200).json({ message: "OTP sent to your email" });
   } catch (error) {
-    return res.status(500).json({ message: "Failed to resend OTP" });
+    console.error("Resend verification OTP error:", error.message);
+    return res.status(500).json({ message: "Something went wrong. Please try again." });
   }
 };
 

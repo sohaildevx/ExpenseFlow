@@ -10,6 +10,13 @@ export const SimpleExpenseContextProvider = ({ children }) => {
     const [simpleUser, setSimpleUser] = useState(null);
     const [budget, setBudget] = useState(null);
 
+    const parseError = (error) => {
+        const data = error.response?.data;
+        if (data?.message) return data.message;
+        if (data?.errors?.length) return data.errors.map(e => e.msg).join(', ');
+        return 'Something went wrong. Please try again.';
+    };
+
     const createExpense = async(expenseData)=>{
         try {
             const response = await axios.post('/expense',expenseData);
@@ -17,7 +24,8 @@ export const SimpleExpenseContextProvider = ({ children }) => {
             setLoading(true);
             return {success:true, data: response.data};
         } catch (error) {
-            return {success:false, message: error.response?.data?.message || 'Failed to create expense'};
+            console.error("Create expense error:", error);
+            return {success:false, message: parseError(error)};
         }
     }
 
@@ -28,7 +36,8 @@ export const SimpleExpenseContextProvider = ({ children }) => {
             setExpenses(response.data.expenses);
             return {success:true, data: response.data};
         } catch (error) {
-            return {success:false, message: error.response?.data?.message || 'Failed to fetch expenses'};
+            console.error("Get expenses error:", error);
+            return {success:false, message: parseError(error)};
         } finally {
             setLoading(false); 
         }
@@ -40,7 +49,8 @@ export const SimpleExpenseContextProvider = ({ children }) => {
             const response = await axios.delete(`/expense/${expenseId}`);
             return {success:true, data: response.data};
          } catch (error) {
-            return {success:false, message: error.response?.data?.message || 'Failed to delete expense'};
+            console.error("Delete expense error:", error);
+            return {success:false, message: parseError(error)};
          }finally{
             setLoading(false);
          }
@@ -53,7 +63,8 @@ export const SimpleExpenseContextProvider = ({ children }) => {
             setSimpleUser(response.data.user);
             return {success:true, data: response.data};
         } catch (error) {
-            return {success:false, message: error.response?.data?.message || 'Failed to update expense'};
+            console.error("Update expense error:", error);
+            return {success:false, message: parseError(error)};
         } finally {
             setLoading(false);
         }
@@ -71,7 +82,8 @@ export const SimpleExpenseContextProvider = ({ children }) => {
             });
             return {success:true, data: response.data};
         } catch (error) {
-            return {success:false, message: error.response?.data?.message || 'Failed to scan receipt'};
+            console.error("Scan receipt error:", error);
+            return {success:false, message: parseError(error)};
         } finally {
             setLoading(false);
         }
@@ -89,7 +101,8 @@ export const SimpleExpenseContextProvider = ({ children }) => {
             });
             return {success:true, data: response.data};
         } catch (error) {
-            return {success:false, message: error.response?.data?.message || 'Failed to upload receipt'};
+            console.error("Upload receipt error:", error);
+            return {success:false, message: parseError(error)};
         } finally {
             setLoading(false);
         }
@@ -104,7 +117,8 @@ export const SimpleExpenseContextProvider = ({ children }) => {
             setBudget(response.data.budget);
             return {success:true, data: response.data};
         } catch (error) {
-            return {success:false, message: error.response?.data?.message || 'Failed to add budget'};
+            console.error("Add budget error:", error);
+            return {success:false, message: parseError(error)};
         } finally {
             setLoading(false);
         }
@@ -117,7 +131,8 @@ export const SimpleExpenseContextProvider = ({ children }) => {
             setBudget(response.data.budget);
             return {success:true, data: response.data};
         } catch (error) {
-            return {success:false, message: error.response?.data?.message || 'Failed to fetch budget'};
+            console.error("Get budget error:", error);
+            return {success:false, message: parseError(error)};
         } finally {
             setLoading(false);
         }
@@ -130,7 +145,8 @@ export const SimpleExpenseContextProvider = ({ children }) => {
             setBudget(response.data.budgets);
             return {success:true, data: response.data};
         } catch (error) {
-            return {success:false, message: error.response?.data?.message || 'Failed to fetch budgets'};
+            console.error("Get budgets error:", error);
+            return {success:false, message: parseError(error)};
         } finally {
             setLoading(false);
         }
@@ -142,7 +158,8 @@ export const SimpleExpenseContextProvider = ({ children }) => {
             const response = await axios.delete(`/budget/deleteBudget/${budgetId}`);
             return {success:true, data: response.data};
         } catch (error) {
-            return {success:false, message: error.response?.data?.message || 'Failed to delete budget'};
+            console.error("Delete budget error:", error);
+            return {success:false, message: parseError(error)};
         } finally {
             setLoading(false);
         }
@@ -155,7 +172,8 @@ export const SimpleExpenseContextProvider = ({ children }) => {
             setBudget(response.data.updatedBudget);
             return {success:true, data: response.data};
         } catch (error) {
-            return {success:false, message: error.response?.data?.message || 'Failed to update budget'};
+            console.error("Update budget error:", error);
+            return {success:false, message: parseError(error)};
         } finally {
             setLoading(false);
         }
@@ -192,4 +210,3 @@ export const useSimpleExpense = () => {
     }
     return context;
 }
-

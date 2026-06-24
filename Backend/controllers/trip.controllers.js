@@ -5,7 +5,7 @@ import { cloudinary } from "../utils/cloudinary.js";
 const createTripExpense = async(req,res)=>{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ errors: errors.array().map(e => ({ ...e, value: undefined })) });
     }
 
     if (!req.user || !req.user.id) {
@@ -45,7 +45,8 @@ const createTripExpense = async(req,res)=>{
 
         return res.status(201).json({message:"Trip expense created successfully", tripExpense});
     } catch (error) {
-        return res.status(500).json({message:"Failed to create trip expense"});
+        console.error("Create trip error:", error.message);
+        return res.status(500).json({message:"Something went wrong. Please try again."});
     }
 }
 
@@ -60,7 +61,8 @@ const getTripExpenses = async(req,res)=>{
         }
         res.status(200).json({trip});
     } catch (error) {
-        return res.status(500).json({message:"Failed to retrieve trip expense"});
+        console.error("Get trip error:", error.message);
+        return res.status(500).json({message:"Something went wrong. Please try again."});
     }
 }
 
@@ -70,14 +72,15 @@ const getAllTripExpenses = async(req,res)=>{
         const trips = await TripExpenses.find({ userId }).sort({createdAt: -1});
         return res.status(200).json({trips, count: trips.length});
     } catch (error) {
-        return res.status(500).json({message:"Failed to retrieve trips"});
+        console.error("Get all trips error:", error.message);
+        return res.status(500).json({message:"Something went wrong. Please try again."});
     }
 }
 
 const updateTrips = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(400).json({ errors: errors.array().map(e => ({ ...e, value: undefined })) });
   }
 
   const { id } = req.params;
@@ -144,7 +147,8 @@ const updateTrips = async (req, res) => {
     });
 
   } catch (error) {
-    return res.status(500).json({ message: "Failed to update trip expense" });
+    console.error("Update trip error:", error.message);
+    return res.status(500).json({ message: "Something went wrong. Please try again." });
   }
 };
 
@@ -159,7 +163,8 @@ const deleteTrip = async(req,res)=>{
         }
         return res.status(200).json({message:"Trip expense deleted successfully"});
     } catch (error) {
-        return res.status(500).json({message:"Failed to delete trip expense"});
+        console.error("Delete trip error:", error.message);
+        return res.status(500).json({message:"Something went wrong. Please try again."});
     }
 }
 
@@ -185,7 +190,8 @@ const uploadRecipt = async(req,res)=>{
       await trip.save();
       res.status(200).json({message:"Receipt uploaded successfully", receipt: trip.receipts[trip.receipts.length - 1]});
     } catch (error) {
-      return res.status(500).json({message:"Failed to upload receipt"});
+      console.error("Upload trip receipt error:", error.message);
+      return res.status(500).json({message:"Failed to upload receipt. Please try again."});
     }
 }
 
@@ -211,7 +217,8 @@ const deleteRecipt = async(req,res)=>{
 
       res.status(200).json({message:"Receipt deleted successfully"});
     } catch (error) {
-      return res.status(500).json({message:"Failed to delete receipt"});
+      console.error("Delete trip receipt error:", error.message);
+      return res.status(500).json({message:"Failed to delete receipt. Please try again."});
     }
   }
 
@@ -227,7 +234,8 @@ const deleteRecipt = async(req,res)=>{
 
     res.status(200).json({ receipts: trip.receipts });
   } catch (error) {
-    return res.status(500).json({ message: 'Failed to get receipts' });
+    console.error("Get receipts error:", error.message);
+    return res.status(500).json({ message: 'Something went wrong. Please try again.' });
   }
 };
 

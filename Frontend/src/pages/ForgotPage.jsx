@@ -29,8 +29,13 @@ const ForgotPage = () => {
     try {
       setLoading(true);
       const response = await resetPassOtp(email);
-      setIsEmailSent(true);
-      toast.success(response.message || "OTP sent successfully!");
+      if (response.success) {
+        setIsEmailSent(true);
+        toast.success(response.message || "OTP sent successfully!");
+      } else {
+        setError(response.message);
+        toast.error(response.message);
+      }
     } catch (error) {
       setError(error.response?.data?.message || "Failed to send OTP");
       toast.error(error.response?.data?.message || "Failed to send OTP");
