@@ -5,6 +5,9 @@ import { sendMail } from "../config/nodeMailer.js";
 import { resetPasswordTemplate } from "../config/EmailTemplate.js";
 import crypto from "crypto";
 import {emailVerificationTemplate} from "../config/EmailTemplate.js"
+import { OAuth2Client } from "google-auth-library";
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 
 const createUser = async (req, res) => {
@@ -329,6 +332,70 @@ const resendVerificationOtp = async (req, res) => {
   }
 };
 
+const googleLogin = async (req, res) => {
+  const { credential, userType } = req.body;
+
+  if (!credential) {
+    return res.status(400).json({ message: "Google credential is required" });
+  }
+
+  try {
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const { sub: googleId, email, name, picture } = payload;
+
+    let user = await User.findOne({ email });
+
+    if (user) {
+      if (!user.googleId) {
+        user.googleId = googleId;
+        if (picture) user.avatar = picture;
+        await user.save();
+      }
+    } else {
+      if (!userType || !['transport', 'simple'].includes(userType)) {
+        return res.status(400).json({ message: "Please select a user type (transport or simple)" });
+      }
+
+      user = await User.create({
+        name,
+        email,
+        googleId,
+        avatar: picture,
+        isEmailVerified: true,
+        userType,
+      });
+    }
+
+    const tokenPayload = {
+      email: user.email,
+      id: user._id,
+      userType: user.userType,
+    };
+
+    const token = generateToken(tokenPayload);
+    setTokenCookie(res, token);
+
+    return res.status(200).json({
+      message: "Google login successful",
+      user: {
+        name: user.name,
+        email: user.email,
+        id: user._id,
+        userType: user.userType,
+        avatar: user.avatar,
+      },
+    });
+  } catch (error) {
+    console.error("Google login error:", error.message);
+    return res.status(500).json({ message: "Something went wrong. Please try again." });
+  }
+};
+
 export {
   createUser,
   loginUser,
@@ -339,4 +406,5 @@ export {
   resetPassword,
   verifyEmail,
   resendVerificationOtp,
+  googleLogin,
 };
