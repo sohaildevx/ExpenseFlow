@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import { Link,useNavigate } from "react-router-dom";
 import { useAuth } from '../context/AuthContext';
+import { GoogleLogin } from '@react-oauth/google';
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { FaUser } from "react-icons/fa";
@@ -14,7 +15,7 @@ const SignUp = () => {
     const [userType, setUserType] = useState('simple');
     const [loading, setLoading] = useState(false);
     const navigate= useNavigate();
-    const {register}=useAuth();
+    const {register, googleLogin}=useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -41,6 +42,29 @@ const SignUp = () => {
           setLoading(false);
         }
     }
+
+    const handleGoogleSuccess = async (credentialResponse) => {
+        setLoading(true);
+        try {
+            const result = await googleLogin(credentialResponse.credential, userType);
+            if (result.success) {
+                toast.success("Google signup successful!");
+            } else {
+                setError(result.message);
+                toast.error(result.message);
+            }
+        } catch (error) {
+            setError("Google signup failed. Please try again.");
+            toast.error("Google signup failed. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleGoogleError = () => {
+        toast.error("Google signup failed. Please try again.");
+    };
+
   return (
      <div className='min-h-screen bg-stone-100 flex flex-col'>
           <div className='p-2 md:p-4'>
@@ -51,7 +75,7 @@ const SignUp = () => {
             </Link>
           </div>
     <div className="flex justify-center items-center px-3 py-2 md:py-4 bg-stone-100 flex-1">
-      <form className="flex flex-col w-full max-w-md p-4 md:p-5 border-6 md:border-8 border-black bg-yellow-400 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+      <form className="flex flex-col w-full max-w-md p-4 md:p-5 border-6 md:border-8 border-black bg-yellow-400 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" onSubmit={handleSubmit}>
         <h2 className="text-xl md:text-2xl font-black uppercase text-center mb-2 border-b-4 border-black pb-2">
           Sign Up to ExpenseFlow
         </h2>
@@ -139,7 +163,6 @@ const SignUp = () => {
         <button
           type="submit"
           disabled={loading}
-          onClick={handleSubmit}
           className="bg-black text-yellow-400 font-black text-base md:text-xl uppercase py-2 px-4 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 active:bg-gray-800 active:shadow-none active:translate-x-1 active:translate-y-1 transition-all mb-2 select-none disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? 'Signing Up...' : 'Sign Up'}
@@ -151,6 +174,17 @@ const SignUp = () => {
             Or
           </span>
           <div className="flex-1 border-t-4 border-black"></div>
+        </div>
+
+        <div className="flex justify-center mb-2">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
+            theme="outline"
+            size="large"
+            width="100%"
+            text="continue_with"
+          />
         </div>
 
         <div className="text-center mt-1">

@@ -118,6 +118,17 @@ export const AuthProvider = ({children}) => {
         }
     }
 
+    const googleLogin = async(credential, userType)=>{
+        try{
+            const response = await axios.post('/user/google',{credential, userType});
+            setIsAuthenticated(true);
+            setUser(response.data.user);
+            return {success:true, user: response.data.user};
+        }catch(error){
+            return {success:false, message: parseError(error)};
+        }
+    }
+
     const value ={
         user,
         loading,
@@ -127,6 +138,7 @@ export const AuthProvider = ({children}) => {
         resetPassword,
         verifyEmail,
         resendVerificationOtp,
+        googleLogin,
         login,
         logOut,
         register,

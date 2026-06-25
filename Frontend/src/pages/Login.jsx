@@ -2,6 +2,7 @@ import React, {useState,useEffect} from 'react'
 import {Link} from 'react-router-dom'
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { GoogleLogin } from '@react-oauth/google';
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { toast } from 'react-toastify';
@@ -11,7 +12,7 @@ const Login = () => {
   const [error,setError]=useState(null);
   const [email,setEmail]=useState('');
   const [password,setPassword]=useState('');
-  const {login,isAuthenticated,user}=useAuth();
+  const {login,isAuthenticated,user,googleLogin}=useAuth();
   const [loading, setLoading] = useState(false);
 
   useEffect(()=>{
@@ -56,6 +57,28 @@ const Login = () => {
     
   }
 
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setLoading(true);
+    try {
+      const result = await googleLogin(credentialResponse.credential);
+      if (result.success) {
+        toast.success("Google login successful!");
+      } else {
+        setError(result.message);
+        toast.error(result.message);
+      }
+    } catch (error) {
+      setError("Google login failed. Please try again.");
+      toast.error("Google login failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleError = () => {
+    toast.error("Google login failed. Please try again.");
+  };
+
   return (
         <div className='min-h-screen bg-stone-100'>
       <div className='p-4'>
@@ -66,7 +89,7 @@ const Login = () => {
         </Link>
       </div>
     <div className='flex justify-center items-center  px-4 py-6 md:py-8 bg-stone-100'>
-      <form className='flex flex-col w-full max-w-md p-6 md:p-6 border-8 border-black bg-yellow-400 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] sm:shadow-[16px_16px_0px_0px_rgba(0,0,0,1)]' >
+      <form className='flex flex-col w-full max-w-md p-6 md:p-6 border-8 border-black bg-yellow-400 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] sm:shadow-[16px_16px_0px_0px_rgba(0,0,0,1)]' onSubmit={handleSubmit}>
         <h2 className='text-2xl md:text-3xl font-black uppercase text-center mb-5 border-b-4 border-black pb-3'>Login to ExpenseFlow</h2>
 
         <label htmlFor="email" className='text-black text-sm md:text-base font-black uppercase mb-1 tracking-tight'>
@@ -113,7 +136,6 @@ const Login = () => {
         <button
           type='submit'
           disabled={loading}
-          onClick={handleSubmit}
           className='bg-black text-yellow-400 font-black text-xl md:text-2xl uppercase py-3 px-6 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-2 hover:translate-y-2 active:bg-gray-800 active:shadow-none active:translate-x-2 active:translate-y-2 transition-all mb-4 select-none disabled:opacity-50 disabled:cursor-not-allowed'
         >
           {loading ? 'Logging In...' : 'Login'}
@@ -123,6 +145,17 @@ const Login = () => {
           <div className='flex-1 border-t-4 border-black'></div>
           <span className='px-4 font-black uppercase text-base tracking-wider'>Or</span>
           <div className='flex-1 border-t-4 border-black'></div>
+        </div>
+
+        <div className='flex justify-center mb-4'>
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
+            theme="outline"
+            size="large"
+            width="100%"
+            text="continue_with"
+          />
         </div>
 
         <div className='text-center mt-3'>
