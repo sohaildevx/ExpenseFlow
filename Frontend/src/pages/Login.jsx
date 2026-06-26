@@ -6,14 +6,17 @@ import { GoogleLogin } from '@react-oauth/google';
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { toast } from 'react-toastify';
+import ModeSelectionModal from '../components/ModeSelectionModal';
 
 const Login = () => {
   const navigate=useNavigate();
   const [error,setError]=useState(null);
   const [email,setEmail]=useState('');
   const [password,setPassword]=useState('');
-  const {login,isAuthenticated,user,googleLogin}=useAuth();
+  const {login,isAuthenticated,user,googleLogin,completeGoogleSignup}=useAuth();
   const [loading, setLoading] = useState(false);
+  const [showModeModal, setShowModeModal] = useState(false);
+  const [googleCredential, setGoogleCredential] = useState(null);
 
   useEffect(()=>{
      if(isAuthenticated && user){
@@ -63,6 +66,9 @@ const Login = () => {
       const result = await googleLogin(credentialResponse.credential);
       if (result.success) {
         toast.success("Google login successful!");
+      } else if (result.needsModeSelection) {
+        setGoogleCredential(result.googleCredential);
+        setShowModeModal(true);
       } else {
         setError(result.message);
         toast.error(result.message);
@@ -70,6 +76,25 @@ const Login = () => {
     } catch (error) {
       setError("Google login failed. Please try again.");
       toast.error("Google login failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleModeSelect = async (userType) => {
+    setLoading(true);
+    try {
+      const result = await completeGoogleSignup(googleCredential, userType);
+      if (result.success) {
+        toast.success("Account created successfully!");
+        setShowModeModal(false);
+      } else {
+        setError(result.message);
+        toast.error(result.message);
+      }
+    } catch (error) {
+      setError("Failed to complete signup. Please try again.");
+      toast.error("Failed to complete signup. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -176,6 +201,13 @@ const Login = () => {
         
       </form>
     </div>
+
+    {showModeModal && (
+      <ModeSelectionModal 
+        onSelect={handleModeSelect} 
+        loading={loading} 
+      />
+    )}
      </div> 
   )
 }

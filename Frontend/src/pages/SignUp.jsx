@@ -6,6 +6,7 @@ import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { FaUser } from "react-icons/fa";
 import { toast } from 'react-toastify';
+import ModeSelectionModal from '../components/ModeSelectionModal';
 
 const SignUp = () => {
     const [error, setError] = useState(null);
@@ -14,8 +15,10 @@ const SignUp = () => {
     const [password, setPassword] = useState('');
     const [userType, setUserType] = useState('simple');
     const [loading, setLoading] = useState(false);
+    const [showModeModal, setShowModeModal] = useState(false);
+    const [googleCredential, setGoogleCredential] = useState(null);
     const navigate= useNavigate();
-    const {register, googleLogin}=useAuth();
+    const {register, googleLogin, completeGoogleSignup}=useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -46,9 +49,12 @@ const SignUp = () => {
     const handleGoogleSuccess = async (credentialResponse) => {
         setLoading(true);
         try {
-            const result = await googleLogin(credentialResponse.credential, userType);
+            const result = await googleLogin(credentialResponse.credential);
             if (result.success) {
                 toast.success("Google signup successful!");
+            } else if (result.needsModeSelection) {
+                setGoogleCredential(result.googleCredential);
+                setShowModeModal(true);
             } else {
                 setError(result.message);
                 toast.error(result.message);
@@ -56,6 +62,25 @@ const SignUp = () => {
         } catch (error) {
             setError("Google signup failed. Please try again.");
             toast.error("Google signup failed. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleModeSelect = async (selectedUserType) => {
+        setLoading(true);
+        try {
+            const result = await completeGoogleSignup(googleCredential, selectedUserType);
+            if (result.success) {
+                toast.success("Account created successfully!");
+                setShowModeModal(false);
+            } else {
+                setError(result.message);
+                toast.error(result.message);
+            }
+        } catch (error) {
+            setError("Failed to complete signup. Please try again.");
+            toast.error("Failed to complete signup. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -203,6 +228,13 @@ const SignUp = () => {
         </div>
       </form>
     </div>
+
+    {showModeModal && (
+      <ModeSelectionModal 
+        onSelect={handleModeSelect} 
+        loading={loading} 
+      />
+    )}
      </div> 
   );
 };

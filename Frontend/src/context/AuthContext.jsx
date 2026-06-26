@@ -121,6 +121,15 @@ export const AuthProvider = ({children}) => {
     const googleLogin = async(credential, userType)=>{
         try{
             const response = await axios.post('/user/google',{credential, userType});
+            return {success:true, ...response.data};
+        }catch(error){
+            return {success:false, message: parseError(error)};
+        }
+    }
+
+    const completeGoogleSignup = async(credential, userType)=>{
+        try{
+            const response = await axios.post('/user/google/complete',{credential, userType});
             setIsAuthenticated(true);
             setUser(response.data.user);
             return {success:true, user: response.data.user};
@@ -139,6 +148,7 @@ export const AuthProvider = ({children}) => {
         verifyEmail,
         resendVerificationOtp,
         googleLogin,
+        completeGoogleSignup,
         login,
         logOut,
         register,
