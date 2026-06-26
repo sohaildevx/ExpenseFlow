@@ -52,6 +52,11 @@ const SignUp = () => {
             const result = await googleLogin(credentialResponse.credential);
             if (result.success) {
                 toast.success("Google signup successful!");
+                if(result.user?.userType === 'transport'){
+                    navigate('/dashboard');
+                } else if(result.user?.userType === 'simple'){
+                    navigate('/expense-dashboard');
+                }
             } else if (result.needsModeSelection) {
                 setGoogleCredential(result.googleCredential);
                 setShowModeModal(true);
@@ -74,6 +79,11 @@ const SignUp = () => {
             if (result.success) {
                 toast.success("Account created successfully!");
                 setShowModeModal(false);
+                if(result.user?.userType === 'transport'){
+                    navigate('/dashboard');
+                } else if(result.user?.userType === 'simple'){
+                    navigate('/expense-dashboard');
+                }
             } else {
                 setError(result.message);
                 toast.error(result.message);

@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useAuth } from '../src/context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { FiLogOut, FiUser, FiDollarSign, FiTrendingUp, FiPieChart, FiEdit2, FiTrash2 } from 'react-icons/fi';
-import { MdDashboard, MdAccountBalanceWallet } from 'react-icons/md';
+import { MdAccountBalanceWallet } from 'react-icons/md';
 import { useSimpleExpense } from '../src/context/SimpleExpenseContext';
 
 const ExpenseDashboard = () => {
@@ -267,13 +267,6 @@ const ExpenseDashboard = () => {
 
                 
                 <div className="p-2">
-                  <Link to="/expense-dashboard">
-                    <button className="w-full flex items-center gap-3 p-3 font-bold hover:bg-yellow-400 transition-colors border-2 border-transparent hover:border-black mb-1">
-                      <MdDashboard className="text-xl" />
-                      <span>Dashboard</span>
-                    </button>
-                  </Link>
-
                   <Link to="/expenses">
                     <button className="w-full flex items-center gap-3 p-3 font-bold hover:bg-yellow-400 transition-colors border-2 border-transparent hover:border-black mb-1">
                       <FiDollarSign className="text-xl" />

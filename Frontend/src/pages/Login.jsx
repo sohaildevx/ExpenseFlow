@@ -20,11 +20,8 @@ const Login = () => {
 
   useEffect(()=>{
      if(isAuthenticated && user){
-       if(user.userType === 'transport'){
-         navigate('/dashboard');
-       } else if(user.userType === 'simple'){
-         navigate('/expense-dashboard');
-       }
+       const dest = user.userType === 'transport' ? '/dashboard' : '/expense-dashboard';
+       navigate(dest, {replace: true});
      }
   }, [isAuthenticated, user, navigate]);
 

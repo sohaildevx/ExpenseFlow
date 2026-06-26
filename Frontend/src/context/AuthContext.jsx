@@ -25,8 +25,14 @@ export const AuthProvider = ({children}) => {
             setUser(response.data.user);
             setIsAuthenticated(true);
           } catch (error) {
-            setIsAuthenticated(false);
-            setUser(null);
+            setIsAuthenticated(prev => {
+              if (prev) return prev;
+              return false;
+            });
+            setUser(prev => {
+              if (prev) return prev;
+              return null;
+            });
           } finally{
             setLoading(false);
           }
@@ -38,7 +44,8 @@ export const AuthProvider = ({children}) => {
             const response = await axios.post('/user/login',{email,password});
             setIsAuthenticated(true);
             setUser(response.data.user);
-            return {success: true};
+            setLoading(false);
+            return {success: true, user: response.data.user};
          } catch (error) {
             if (error.response?.status === 403 && error.response?.data?.needsVerification) {
                 return {success: false, needsVerification: true, email: error.response.data.email, message: error.response.data.message};
@@ -121,6 +128,11 @@ export const AuthProvider = ({children}) => {
     const googleLogin = async(credential, userType)=>{
         try{
             const response = await axios.post('/user/google',{credential, userType});
+            if(response.data.user){
+                setIsAuthenticated(true);
+                setUser(response.data.user);
+                setLoading(false);
+            }
             return {success:true, ...response.data};
         }catch(error){
             return {success:false, message: parseError(error)};
@@ -132,6 +144,7 @@ export const AuthProvider = ({children}) => {
             const response = await axios.post('/user/google/complete',{credential, userType});
             setIsAuthenticated(true);
             setUser(response.data.user);
+            setLoading(false);
             return {success:true, user: response.data.user};
         }catch(error){
             return {success:false, message: parseError(error)};

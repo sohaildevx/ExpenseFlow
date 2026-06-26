@@ -17,7 +17,7 @@ const ServerWaking = ({ children }) => {
           setReady(true);
         }
       } catch {
-        throw error;
+        // server still sleeping, retry
       }
     };
 
