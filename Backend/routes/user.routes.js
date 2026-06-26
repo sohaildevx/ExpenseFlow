@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUser, loginUser, getCurrentUser, logOutUser, resetPassOtp, verifyResetOtp, resetPassword, verifyEmail, resendVerificationOtp, googleLogin } from "../controllers/user.controllers.js";
+import { createUser, loginUser, getCurrentUser, logOutUser, resetPassOtp, verifyResetOtp, resetPassword, verifyEmail, resendVerificationOtp, googleLogin, completeGoogleSignup } from "../controllers/user.controllers.js";
 import { body } from "express-validator";
 import {authToken} from "../middleware/auth.js";
 
@@ -47,5 +47,6 @@ router.get('/getCurrentUser',authToken,getCurrentUser);
 router.post('/logout',authToken,logOutUser);
 
 router.post('/google', googleLogin);
+router.post('/google/complete', completeGoogleSignup);
 
 export default router;

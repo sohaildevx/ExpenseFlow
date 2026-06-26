@@ -356,11 +356,102 @@ const googleLogin = async (req, res) => {
         if (picture) user.avatar = picture;
         await user.save();
       }
-    } else {
-      if (!userType || !['transport', 'simple'].includes(userType)) {
-        return res.status(400).json({ message: "Please select a user type (transport or simple)" });
-      }
 
+      const tokenPayload = {
+        email: user.email,
+        id: user._id,
+        userType: user.userType,
+      };
+
+      const token = generateToken(tokenPayload);
+      setTokenCookie(res, token);
+
+      return res.status(200).json({
+        success: true,
+        message: "Google login successful",
+        user: {
+          name: user.name,
+          email: user.email,
+          id: user._id,
+          userType: user.userType,
+          avatar: user.avatar,
+        },
+      });
+    }
+
+    // New user - needs to select mode
+    if (!userType || !['transport', 'simple'].includes(userType)) {
+      return res.status(200).json({
+        success: false,
+        needsModeSelection: true,
+        googleCredential: credential,
+        name,
+        email,
+        avatar: picture,
+      });
+    }
+
+    user = await User.create({
+      name,
+      email,
+      googleId,
+      avatar: picture,
+      isEmailVerified: true,
+      userType,
+    });
+
+    const tokenPayload = {
+      email: user.email,
+      id: user._id,
+      userType: user.userType,
+    };
+
+    const token = generateToken(tokenPayload);
+    setTokenCookie(res, token);
+
+    return res.status(200).json({
+      success: true,
+      message: "Google signup successful",
+      user: {
+        name: user.name,
+        email: user.email,
+        id: user._id,
+        userType: user.userType,
+        avatar: user.avatar,
+      },
+    });
+  } catch (error) {
+    console.error("Google login error:", error.message);
+    return res.status(500).json({ message: "Something went wrong. Please try again." });
+  }
+};
+
+const completeGoogleSignup = async (req, res) => {
+  const { credential, userType } = req.body;
+
+  if (!credential || !userType) {
+    return res.status(400).json({ message: "Credential and user type are required" });
+  }
+
+  if (!['transport', 'simple'].includes(userType)) {
+    return res.status(400).json({ message: "User type must be 'transport' or 'simple'" });
+  }
+
+  try {
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const { sub: googleId, email, name, picture } = payload;
+
+    let user = await User.findOne({ email });
+
+    if (user) {
+      user.userType = userType;
+      await user.save();
+    } else {
       user = await User.create({
         name,
         email,
@@ -381,7 +472,8 @@ const googleLogin = async (req, res) => {
     setTokenCookie(res, token);
 
     return res.status(200).json({
-      message: "Google login successful",
+      success: true,
+      message: "Google signup successful",
       user: {
         name: user.name,
         email: user.email,
@@ -391,7 +483,7 @@ const googleLogin = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Google login error:", error.message);
+    console.error("Complete Google signup error:", error.message);
     return res.status(500).json({ message: "Something went wrong. Please try again." });
   }
 };
@@ -407,4 +499,5 @@ export {
   verifyEmail,
   resendVerificationOtp,
   googleLogin,
+  completeGoogleSignup,
 };
