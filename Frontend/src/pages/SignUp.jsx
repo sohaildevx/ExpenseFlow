@@ -6,7 +6,7 @@ import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { FaUser } from "react-icons/fa";
 import { toast } from 'react-toastify';
-import ModeSelectionModal from '../components/ModeSelectionModal';
+import ModeSelectionModal from '../Components/ModeSelectionModal';
 
 const SignUp = () => {
     const [error, setError] = useState(null);

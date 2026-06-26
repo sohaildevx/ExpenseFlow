@@ -6,7 +6,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { toast } from 'react-toastify';
-import ModeSelectionModal from '../components/ModeSelectionModal';
+import ModeSelectionModal from '../Components/ModeSelectionModal';
 
 const Login = () => {
   const navigate=useNavigate();
