@@ -226,8 +226,69 @@ const ExpenseDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F0F0F0] flex items-center justify-center">
-        <div className="text-2xl font-black uppercase animate-pulse">Loading...</div>
+      <div className="min-h-screen bg-[#F0F0F0]">
+        <header className="bg-[#F0F0F0] border-b-8 border-black p-4 sticky top-0 z-50">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="h-7 w-36 bg-gray-300 border-2 border-black animate-pulse" />
+            <div className="flex items-center gap-4">
+              <div className="h-10 w-28 bg-gray-300 border-2 border-black animate-pulse" />
+              <div className="w-12 h-12 bg-gray-300 border-2 border-black rounded-full animate-pulse" />
+            </div>
+          </div>
+        </header>
+        <main className="max-w-7xl mx-auto p-4 md:p-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            {[1,2,3].map(i => (
+              <div key={i} className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="h-4 w-28 bg-gray-300 border-2 border-black animate-pulse" />
+                  <div className="h-6 w-6 bg-gray-300 border-2 border-black animate-pulse" />
+                </div>
+                <div className="h-9 w-24 bg-gray-300 border-2 border-black animate-pulse mb-2" />
+                <div className="h-3 w-20 bg-gray-200 animate-pulse" />
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+              <div className="flex items-center gap-2 mb-4 pb-3 border-b-4 border-black">
+                <div className="h-6 w-6 bg-gray-300 border-2 border-black animate-pulse" />
+                <div className="h-5 w-40 bg-gray-300 border-2 border-black animate-pulse" />
+              </div>
+              <div className="space-y-4">
+                {[1,2,3].map(i => (
+                  <div key={i}>
+                    <div className="flex justify-between mb-2">
+                      <div className="h-4 w-20 bg-gray-300 border-2 border-black animate-pulse" />
+                      <div className="h-4 w-24 bg-gray-300 border-2 border-black animate-pulse" />
+                    </div>
+                    <div className="h-8 bg-gray-200 border-4 border-black">
+                      <div className="h-full bg-gray-300 animate-pulse" style={{ width: `${60 - i * 15}%` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="lg:col-span-1 bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+              <div className="h-5 w-32 bg-gray-300 border-2 border-black animate-pulse mb-4 pb-3 border-b-4 border-black" />
+              <div className="space-y-3">
+                {[1,2,3,4].map(i => (
+                  <div key={i} className="p-3 border-2 border-black">
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="h-4 w-24 bg-gray-300 border-2 border-black animate-pulse" />
+                      <div className="h-4 w-16 bg-gray-300 border-2 border-black animate-pulse" />
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div className="h-5 w-16 bg-gray-200 border border-black animate-pulse" />
+                      <div className="h-3 w-16 bg-gray-200 animate-pulse" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="h-10 w-full bg-gray-300 border-4 border-black animate-pulse mt-4" />
+            </div>
+          </div>
+        </main>
       </div>
     );
   }
